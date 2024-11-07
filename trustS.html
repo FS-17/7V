@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <link rel="icon" href="./assets/splico.png" type="image/png" />
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>نتحلى بالثقة والشفافية</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      .SPLines {
+        bottom: 1rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <img src="./assets/spl.png" alt="logo" class="logo" />
+    <img src="./assets/Values/we-trust.png" alt="We Trust" class="logoV" />
+
+    <div class="confessions-container"></div>
+    <img src="./assets/BL3.png" alt="BL" class="SPLines" />
+
+    <script>
+      const fbURL = "https://spl-per-default-rtdb.firebaseio.com/trust";
+      const confessionsContainer = document.querySelector(
+        ".confessions-container"
+      );
+      const emojis = ["❤️", "😊", "👏", "😂"];
+
+      let highestZIndex = 1;
+
+      function getRandomPosition(
+        containerWidth,
+        containerHeight,
+        elementWidth,
+        elementHeight
+      ) {
+        const maxX = containerWidth - elementWidth;
+        const maxY = containerHeight - elementHeight;
+        return {
+          x: Math.random() * maxX,
+          y: Math.random() * maxY,
+        };
+      }
+
+      function updateReaction(confessionId, emojiIndex) {
+        const reactionRef = `${fbURL}/${confessionId}/reactions/${emojiIndex}`;
+        fetch(reactionRef + ".json")
+          .then((response) => response.json())
+          .then((count) => {
+            const newCount = (count || 0) + 1;
+            fetch(reactionRef + ".json", {
+              method: "PUT",
+              body: JSON.stringify(newCount),
+            });
+            return newCount;
+          });
+      }
+
+      function createEmojiButtons(confessionId, reactions = []) {
+        const emojiContainer = document.createElement("div");
+        emojiContainer.classList.add("emoji-reactions");
+
+        // Create active reactions container (always visible)
+        const activeContainer = document.createElement("div");
+        activeContainer.classList.add("active-reactions");
+
+        // Create hidden reactions container (shown on click)
+        const hiddenContainer = document.createElement("div");
+        hiddenContainer.classList.add("hidden-reactions");
+        hiddenContainer.style.display = "none";
+
+        let hasAnyReactions = false;
+
+        emojis.forEach((emoji, index) => {
+          const count = reactions[index] || 0;
+          const button = document.createElement("button");
+          button.classList.add("emoji-btn");
+
+          if (count > 0) {
+            hasAnyReactions = true;
+            const activeButton = button.cloneNode();
+            activeButton.innerHTML = `${emoji}<span class="emoji-count">${count}</span>`;
+            activeContainer.appendChild(activeButton);
+          }
+
+          button.innerHTML = `${emoji}${
+            count > 0 ? `<span class="emoji-count">${count}</span>` : ""
+          }`;
+          button.onclick = function (e) {
+            e.stopPropagation();
+            updateReaction(confessionId, index);
+            const countSpan = button.querySelector(".emoji-count");
+            if (countSpan) {
+              countSpan.textContent = parseInt(countSpan.textContent) + 1;
+            } else {
+              button.innerHTML = `${emoji}<span class="emoji-count">1</span>`;
+            }
+          };
+
+          hiddenContainer.appendChild(button);
+        });
+
+        emojiContainer.appendChild(activeContainer);
+        emojiContainer.appendChild(hiddenContainer);
+
+        return { emojiContainer, hasAnyReactions };
+      }
+
+      function fetchConfessions() {
+        fetch(fbURL + ".json")
+          .then((response) => response.json())
+          .then((data) => {
+            confessionsContainer.innerHTML = "";
+
+            if (data) {
+              Object.entries(data).forEach(([id, item]) => {
+                const confessionDiv = document.createElement("div");
+                confessionDiv.classList.add("confession");
+
+                const textDiv = document.createElement("div");
+                textDiv.textContent = item.text;
+                confessionDiv.appendChild(textDiv);
+
+                const { emojiContainer, hasAnyReactions } = createEmojiButtons(
+                  id,
+                  item.reactions
+                );
+                confessionDiv.appendChild(emojiContainer);
+
+                if (hasAnyReactions) {
+                  const activeReactions =
+                    emojiContainer.querySelector(".active-reactions");
+                  activeReactions.style.display = "flex";
+                }
+
+                confessionDiv.addEventListener("click", function (e) {
+                  // Bring clicked confession to front
+                  this.style.zIndex = ++highestZIndex;
+
+                  // Original click handler for reactions
+                  const hiddenReactions =
+                    this.querySelector(".hidden-reactions");
+                  const activeReactions =
+                    this.querySelector(".active-reactions");
+                  if (hiddenReactions.style.display === "none") {
+                    hiddenReactions.style.display = "flex";
+                    // hide active-reactions
+                    activeReactions.style.display = "none";
+
+                    // Set timeout to hide reactions after 5 seconds
+                    setTimeout(() => {
+                      hiddenReactions.style.display = "none";
+                      activeReactions.style.display = "flex";
+                    }, 5000);
+                  } else {
+                    hiddenReactions.style.display = "none";
+                    activeReactions.style.display = "flex";
+                  }
+                });
+
+                confessionsContainer.appendChild(confessionDiv);
+
+                // Get random position after element is rendered to know its size
+                const containerRect =
+                  confessionsContainer.getBoundingClientRect();
+                const elementRect = confessionDiv.getBoundingClientRect();
+                const position = getRandomPosition(
+                  containerRect.width - 40, // Subtract padding
+                  containerRect.height - 40, // Subtract padding
+                  elementRect.width,
+                  elementRect.height
+                );
+
+                confessionDiv.style.left = position.x + "px";
+                confessionDiv.style.top = position.y + "px";
+              });
+
+              // Scroll to the bottom
+              confessionsContainer.scrollTop =
+                confessionsContainer.scrollHeight;
+            }
+          })
+          .catch((error) =>
+            console.error("Error fetching confessions:", error)
+          );
+      }
+
+      // Initial fetch
+      fetchConfessions();
+
+      // Refresh every 30 seconds
+      setInterval(fetchConfessions, 30000);
+    </script>
+  </body>
+</html>

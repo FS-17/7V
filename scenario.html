@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <link rel="icon" href="./assets/splico.png" type="image/png" />
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>نتجاوز تطلعات عملائنا</title>
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      body {
+        min-height: 100vh;
+        touch-action: none; /* Prevent default touch actions for better control */
+      }
+
+      .container {
+        /* Renamed from game-container for broader use */
+        position: relative;
+        width: 95vw;
+        height: 90vh;
+        display: flex;
+        flex-direction: column; /* Changed to column for scenario and solution */
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+      }
+
+      /* Style the scenario area */
+      .scenario {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(15px);
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        font-size: 1.5rem; /* Increased font size for readability */
+        color: var(--dark-teal);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(26, 47, 53, 0.2);
+        width: 80%; /* Occupy most of the container width */
+        max-width: 800px; /* Limit the maximum width */
+      }
+
+      .submit-btn,
+      .next-btn {
+        margin-top: 25px;
+        cursor: pointer;
+      }
+
+      .feedback {
+        /* Style for feedback area */
+        margin-top: 20px;
+        font-size: 1.2rem;
+        color: var(--dark-teal);
+        text-align: center;
+      }
+
+      .SPLines {
+        top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- logo -->
+    <img src="./assets/spl.png" alt="logo" class="logo" />
+    <img src="./assets/Values/we-strive.png" alt="We Trust" class="logoV" />
+
+    <div class="container">
+      <div class="scenario">Loading scenario...</div>
+      <textarea class="solution-input" placeholder="اكتب حلك هنا..."></textarea>
+      <button class="submit-btn">إرسال</button>
+      <div class="feedback"></div>
+      <button class="next-btn" style="display: none">التالي</button>
+    </div>
+    <img src="./assets/BL.png" alt="BL" class="SPLines" />
+
+    <script>
+      const scenarioDiv = document.querySelector(".scenario");
+      const solutionInput = document.querySelector(".solution-input");
+      const submitBtn = document.querySelector(".submit-btn");
+      const feedbackDiv = document.querySelector(".feedback");
+      const nextBtn = document.querySelector(".next-btn");
+
+      // Function to fetch and display a scenario (replace with your actual logic)
+      async function getScenario() {
+        // Placeholder - replace with your ChatGPT API call
+        const scenario = await new Promise((resolve) => {
+          setTimeout(
+            () =>
+              resolve(
+                "حدث مع عميل تأخر استلام شحنة مهمة جداً، وهي عبارة عن قطع غيار لسيارته تعطلت على الطريق. العميل غاضب جداً. ماذا ستفعل؟"
+              ),
+            2000
+          ); // Simulate API call delay
+        });
+        scenarioDiv.textContent = scenario;
+      }
+
+      submitBtn.addEventListener("click", async () => {
+        const solution = solutionInput.value;
+        feedbackDiv.textContent = "جاري التقييم..."; // Show loading message
+
+        // chatgpt will get the user input and evaluate it and give 2 outputs "persentage" "feedback"
+        // the chatGPT prompt: "the is the scenario: " + scenario + "and this is the user solution: " + solution + "i want you to evaluate it and give me a percentage of how good the solution is and a feedback your output should be in arabic and less than 20 word, and should be a positive feedback and be in json format"
+
+        // Placeholder - replace with your ChatGPT API call for evaluation
+        const feedback = await new Promise((resolve) => {
+          setTimeout(
+            () =>
+              resolve(
+                "حل ممتاز! لقد أظهرت تفهمًا  لموقف العميل، وركزت على إيجاد حلول سريعة وفعالة. "
+              ),
+            2000
+          );
+        });
+
+        feedbackDiv.textContent = feedback;
+        nextBtn.style.display = "block"; // Show the next button after feedback
+        submitBtn.style.display = "none"; // Hide submit button
+      });
+
+      nextBtn.addEventListener("click", () => {
+        solutionInput.value = ""; // Clear the input
+        feedbackDiv.textContent = ""; // Clear the feedback
+        nextBtn.style.display = "none"; // Hide the next button
+        submitBtn.style.display = "block"; // Show submit button
+        getScenario(); // Load the next scenario
+      });
+
+      getScenario(); // Initial scenario load
+    </script>
+  </body>
+</html>

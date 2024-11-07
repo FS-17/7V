@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <link rel="icon" href="./assets/splico.png" type="image/png" />
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>نتحلى بالثقة والشفافية</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      .SPLines {
+        bottom: 1rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <img src="./assets/spl.png" alt="logo" class="logo" />
+    <img src="./assets/Values/we-trust.png" alt="We Trust" class="logoV" />
+
+    <div class="container">
+      <h1>نتحلى بالثقة والشفافية</h1>
+      <p>
+        نحن نؤمن بأهمية الثقة والشفافية في علاقتنا مع عملائنا. يمكنكم مشاركة
+        أفكاركم وملاحظاتكم بكل حرية وسنعمل على تحسين خدماتنا بناءً على ذلك.
+      </p>
+      <textarea id="confessionText" placeholder="اكتب هنا..."></textarea><br />
+      <button id="submitBtn">إرسال</button>
+      <div id="message"></div>
+    </div>
+    <img src="./assets/BL2.png" alt="BL" class="SPLines" />
+    <script>
+      const fbURL = "https://spl-per-default-rtdb.firebaseio.com/trust.json";
+      const messageEl = document.getElementById("message");
+
+      document.getElementById("submitBtn").addEventListener("click", () => {
+        const confessionText = document.getElementById("confessionText").value;
+        if (confessionText.trim() === "") {
+          messageEl.textContent = "الرجاء كتابة شيء قبل الإرسال";
+          messageEl.className = "show error";
+          // Auto-hide message after 5 seconds
+          setTimeout(() => {
+            messageEl.className = messageEl.className.replace("show", "");
+          }, 5000);
+
+          return;
+        }
+
+        fetch(fbURL, {
+          method: "POST",
+          body: JSON.stringify({ text: confessionText }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              messageEl.textContent = "تم الارسال بنجاح";
+              messageEl.className = "show success";
+              document.getElementById("confessionText").value = "";
+            } else {
+              messageEl.textContent = "حدث خطأ أثناء الإرسال";
+              messageEl.className = "show error";
+            }
+
+            // Auto-hide message after 5 seconds
+            setTimeout(() => {
+              messageEl.className = messageEl.className.replace("show", "");
+            }, 5000);
+          })
+          .catch((error) => {
+            const messageEl = document.getElementById("message");
+            messageEl.textContent = "حدث خطأ أثناء الإرسال";
+            messageEl.className = "show error";
+
+            // Auto-hide message after 5 seconds
+            setTimeout(() => {
+              messageEl.className = messageEl.className.replace("show", "");
+            }, 5000);
+          });
+      });
+    </script>
+  </body>
+</html>

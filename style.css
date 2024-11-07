@@ -1,0 +1,225 @@
+@font-face {
+    font-family: 'SPLFont';
+    src: url(./assets/SPLfont.ttf) format('truetype');
+}
+
+:root {
+    --turquoise: #00c8e1;
+    --dark-teal: #1a2f35;
+    --white: #ffffff;
+    font-family: 'SPLFont', 'Segoe UI', sans-serif !important;
+}
+
+
+body {
+    margin: 0;
+    background-color: var(--turquoise);
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    min-height: 100vh; /* Ensure full viewport height */
+    flex-direction: column; /* Align items in a column */
+    overflow: hidden;
+
+}
+
+.container {
+    text-align: center; /* Center text within the container */
+    padding: 20px;
+}
+
+
+h1 {
+    color: var(--dark-teal);
+}
+
+p {
+    color: var(--dark-teal);
+    font-size: 1.2rem;
+    font-family: "SPLFont", "Segoe UI", sans-serif !important;
+}
+
+textarea {
+    width: calc(100% - 20px);
+    height: 200px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    border: 1px solid var(--dark-teal);
+    border-radius: 5px;
+    box-sizing: border-box;
+
+    font-family: "SPLFont", "Segoe UI", sans-serif !important;
+}
+
+button {
+    background-color: var(--dark-teal);
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    border-color: #00c8e1;
+    border-radius: 10px;
+    font-family: "SPLFont", "Segoe UI", sans-serif !important;
+    transition: all 0.3s;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+  }
+
+#message {
+    margin-top: 40px;
+    font-size: 1rem;
+    padding: 10px 20px;
+    text-align: center;
+    transition: opacity 0.5s ease-in-out;
+    border-radius: 8px;
+    opacity: 0;
+    max-width: 180px;
+    color: var(--dark-teal);
+    font-weight: bold;
+    font-family: "SPLFont", "Segoe UI", sans-serif !important;
+    margin-left: auto;
+    margin-right: auto; /* Center horizontally */
+}
+#message.show {
+    opacity: 1;
+  }
+
+  #message.success {
+    background-color: rgba(0, 255, 0, 0.5);
+    border: 1px solid #00a86b;
+    color: #006400;
+  }
+
+  #message.error {
+    background-color: rgba(255, 0, 0, 0.5);
+    border: 1px solid #ff0000;
+  }
+
+textarea {
+    width: 80%;
+    max-width: 600px;
+    max-height: 150px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 1.2rem;
+    color: var(--dark-teal);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    resize: none; /* Prevent resizing of the textarea */
+    font-family: "SPLFont", "Segoe UI", sans-serif !important;
+  }
+
+
+.SPLines {
+    position: absolute;
+    transform: rotate(180deg);
+    width: 100%;
+    z-index: -1; /* Ensure it's behind other content */
+}
+
+.logo {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1;
+    width: 100px;
+}
+
+.logoV {
+    position: absolute;
+    top: .3rem;
+    right: -1rem;
+    z-index: 1;
+    width: 170px;
+}
+
+/* Styles for the display page */
+.confessions-container {
+    width: 90%;
+    max-width: 800px; /* Adjust as needed */
+    height: 80vh;
+    overflow-y: auto; /* Add scrollbar if content overflows */
+    border: 2px solid rgba(255, 255, 255, 0.5); /* Soft white border */
+    border-radius: 10px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    position: relative; /* Add this */
+}
+
+
+.confession {
+    background-color: rgba(255, 255, 255, 0.6); /* Whiter background for each confession */
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.2em; /* Make text slightly larger */
+    color: var(--dark-teal);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    font-family: "SPLFont", "Segoe UI", sans-serif !important;
+    position: absolute; /* Add this */
+    display: inline-block; /* Add this */
+    max-width: 200px; /* Add this */
+    word-wrap: break-word; /* Add this */
+    min-width: 150px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    z-index: 1; /* Add this line */
+}
+
+.confession:hover {
+    transform: scale(1.02);
+}
+
+.emoji-reactions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.active-reactions, .hidden-reactions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.active-reactions {
+    margin-bottom: 5px;
+}
+
+.hidden-reactions {
+    border-top: 1px solid rgba(26, 47, 53, 0.1);
+    padding-top: 5px;
+}
+
+.emoji-btn {
+    background: none;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.emoji-btn:hover {
+    transform: scale(1.2);
+}
+
+.emoji-count {
+    font-size: 0.8em;
+    margin-left: 3px;
+    color: var(--dark-teal);
+}
