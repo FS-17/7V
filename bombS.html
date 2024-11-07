@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <link rel="icon" href="./assets/splico.png" type="image/png" />
+    <title>نتعاون ونتشارك معًا (الشاشة الرئيسية)</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <style>
+      .glassContainer {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        border-radius: 15px;
+        padding: 20px;
+        max-width: 800px;
+        max-height: 800px;
+        margin: 20px auto;
+      }
+
+      #instructionGrid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 4x4 grid */
+        grid-gap: 10px; /* Adjust gap as needed */
+        width: 100%; /* Adjust width as needed */
+      }
+
+      .instructionCell {
+        width: 100%;
+        height: 90px; /* Adjust height for larger icons */
+        background: var(--dark-teal);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        color: white; /* Icon color */
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2em; /* Adjust icon size */
+        cursor: default; /* Don't show pointer cursor */
+        transition: all 0.3s ease;
+      }
+
+      .instructionCell:hover {
+        background: rgba(0, 128, 128, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .SPLines {
+        bottom: 2rem; /* Adjust as needed */
+      }
+
+      .fa-solid {
+        pointer-events: none;
+      }
+
+      .green-icon,
+      .red-icon {
+        visibility: visible !important;
+        animation: appear 0.5s ease-in-out;
+        text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+      }
+
+      .green-icon {
+        color: #4caf50;
+      }
+
+      .red-icon {
+        color: #f44336;
+      }
+
+      #mainGrid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 4x4 grid */
+        grid-gap: 10px; /* Adjust gap as needed */
+        width: 100%; /* Adjust width as needed */
+        margin: 0 auto;
+      }
+
+      .cell {
+        width: 100%;
+        height: 110px; /* Adjust height for larger icons */
+        background: var(--dark-teal);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        color: white; /* Icon color */
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2em; /* Adjust icon size */
+        cursor: pointer; /* Make cells clickable */
+        transition: all 0.3s ease;
+      }
+
+      .cell:hover {
+        background: rgba(0, 128, 128, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .cell.correct {
+        background-color: green;
+      }
+      .cell.wrong {
+        background-color: red;
+      }
+
+      @keyframes appear {
+        0% {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .qr-container {
+        margin-top: 20px;
+        text-align: center; /* Center align content */
+      }
+
+      .qr-text {
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      .content-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        width: 90%;
+        margin: 0 auto;
+        gap: 20px;
+      }
+
+      .game-section {
+        flex: 2;
+        order: 1; /* Places game on the left */
+      }
+
+      .qr-container {
+        flex: 1;
+        order: 2; /* Places QR on the right */
+        margin-top: 200px;
+        text-align: center;
+        /* top: 50%; */
+        max-width: 220px;
+        z-index: 1000;
+        text-align: center;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      #mainGrid {
+        width: 100%; /* Adjust width to fit container */
+      }
+
+      .attempts {
+        text-align: center;
+        font-size: 1.5em;
+        margin: 10px 0;
+        color: var(--dark-teal);
+      }
+
+      .message-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .message-box {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        color: white;
+        max-width: 400px;
+      }
+
+      .message-box h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+      }
+
+      .message-box button {
+        background: var(--dark-teal);
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 15px;
+        transition: all 0.3s ease;
+      }
+
+      .message-box button:hover {
+        background: rgba(0, 128, 128, 0.8);
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+  <body>
+    <img src="./assets/spl.png" alt="logo" class="logo" />
+    <img
+      src="./assets/Values/together.png"
+      alt="Together We Thrive"
+      class="logoV"
+    />
+
+    <div class="content-wrapper">
+      <div class="game-section">
+        <div class="glassContainer">
+          <div class="attempts">
+            المحاولات المتبقية: <span id="attemptsLeft">3</span>
+          </div>
+          <div id="mainGrid"></div>
+        </div>
+      </div>
+
+      <div class="qr-container">
+        <div class="qr-text">اجعل زميلك يمسح الرمز</div>
+        <img
+          src="./assets/qrB.png"
+          alt="QR Code"
+          class="qr-code"
+          width="150"
+          height="150"
+        />
+      </div>
+    </div>
+
+    <img src="./assets/BL.png" alt="BL" class="SPLines" />
+
+    <div class="message-overlay" id="messageOverlay">
+      <div class="message-box">
+        <h2 id="messageText"></h2>
+        <button onclick="hideMessage()">حاول مرة أخرى</button>
+      </div>
+    </div>
+
+    <script>
+      const mainGrid = document.getElementById("mainGrid");
+      let icons = [
+        "fas fa-envelope",
+        "fas fa-envelope-open",
+        "fas fa-envelope-open-text",
+        "fas fa-paper-plane",
+        "fas fa-shipping-fast", // Fast shipping
+        "fas fa-inbox",
+        "fas fa-stamp",
+        "fas fa-mail-bulk",
+        "fas fa-box", // Package
+        "fas fa-truck", // Delivery truck
+        "fas fa-location-arrow", // Tracking location
+        "fas fa-map-marker-alt", // Location
+        "fas fa-user-check", // Verified user (maybe for secure delivery?)
+        "fas fa-file-signature", // Signature on delivery
+        "fas fa-clipboard-list", // Checklist
+        "fas fa-address-card", // Contact info
+      ];
+
+      // Instead of storing indices, store the actual correct icons
+      const correctIcons = [
+        "fas fa-envelope",
+        "fas fa-shipping-fast",
+        "fas fa-stamp",
+        "fas fa-mail-bulk",
+        "fas fa-box",
+        "fas fa-map-marker-alt",
+        "fas fa-file-signature",
+        "fas fa-clipboard-list",
+      ];
+
+      let correctClicks = 0;
+      let wrongClicks = 0;
+      const totalCorrect = correctIcons.length;
+      let maxAttempts = 3;
+      let attemptsLeft = maxAttempts;
+      const attemptsDisplay = document.getElementById("attemptsLeft");
+
+      // Add this shuffle function before createGrid()
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+
+      // Store original icons array and indices
+      const originalIcons = [...icons];
+
+      // Modify createGrid function
+      function createGrid() {
+        // Shuffle icons before creating grid
+        icons = shuffleArray([...icons]);
+
+        for (let i = 0; i < 16; i++) {
+          const cell = document.createElement("div");
+          cell.classList.add("cell");
+
+          const icon = document.createElement("i");
+          icon.className = icons[i] + " hidden-icon"; // Icons hidden initially
+
+          cell.appendChild(icon);
+          mainGrid.appendChild(cell);
+
+          cell.addEventListener("click", () => {
+            handleClick(i, cell, icon);
+          });
+        }
+      }
+
+      function handleClick(index, cell, icon) {
+        const iconClass = icons[index];
+        if (correctIcons.includes(iconClass)) {
+          // Check if icon is in correctIcons array
+          if (!cell.classList.contains("correct")) {
+            // Check if already marked correct
+            cell.classList.add("correct"); // Add green background
+            icon.classList.add("green-icon"); // Make icon appear in green
+            icon.classList.remove("hidden-icon");
+            correctClicks++;
+            checkWin();
+          }
+        } else {
+          if (!cell.classList.contains("wrong")) {
+            // Check if already marked wrong
+            cell.classList.add("wrong"); // Add red background
+            icon.classList.add("red-icon");
+            icon.classList.remove("hidden-icon"); // Make icon appear in red
+            wrongClicks++;
+            attemptsLeft--;
+            attemptsDisplay.textContent = attemptsLeft;
+
+            if (attemptsLeft <= 0) {
+              setTimeout(() => {
+                showMessage("انتهت المحاولات!");
+              }, 100);
+            }
+          }
+        }
+      }
+
+      function checkWin() {
+        if (correctClicks === totalCorrect) {
+          showMessage("لقد نجحت! أحسنت التعاون مع زميلك.");
+        }
+      }
+
+      // Modify resetGame function
+      function resetGame() {
+        correctClicks = 0;
+        wrongClicks = 0;
+        attemptsLeft = maxAttempts;
+        attemptsDisplay.textContent = attemptsLeft;
+        const cells = document.querySelectorAll(".cell");
+        cells.forEach((cell) => {
+          cell.classList.remove("correct", "wrong");
+          const icon = cell.querySelector("i");
+          icon.classList.remove("green-icon", "red-icon");
+          icon.classList.add("hidden-icon");
+        });
+
+        // Shuffle icons for new game
+        icons = shuffleArray([...icons]);
+
+        // Rebuild grid with new shuffled icons
+        mainGrid.innerHTML = "";
+        createGrid();
+      }
+
+      function showMessage(message) {
+        const overlay = document.getElementById("messageOverlay");
+        const messageText = document.getElementById("messageText");
+        messageText.textContent = message;
+        overlay.style.display = "flex";
+      }
+
+      function hideMessage() {
+        const overlay = document.getElementById("messageOverlay");
+        overlay.style.display = "none";
+        resetGame();
+      }
+
+      createGrid();
+    </script>
+  </body>
+</html>

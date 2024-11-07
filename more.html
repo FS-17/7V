@@ -38,7 +38,12 @@
         display: none; /* Initially hidden */
       }
       .SPLines {
-        top: 1rem;
+        bottom: 1rem;
+        /* rotat 180 */
+        rotate: 180deg;
+
+        /* flip */
+        /* transform: scaleX(-1); */
       }
       .timer-display {
         font-size: 2rem;
@@ -168,7 +173,7 @@
       </div>
     </div>
 
-    <img src="./assets/BL.png" alt="BL" class="SPLines" />
+    <img src="./assets/BL2.png" alt="BL" class="SPLines" />
 
     <script>
       const canvas = document.getElementById("drawingCanvas");
@@ -229,12 +234,12 @@
                 startDrawing();
               };
               document.querySelector(".btn-no").onclick = () => {
-                prompt.textContent = "انتهى التحدي!";
+                prompt.textContent = "التزامك ببذل المزيد يضمن تحسنك المستمر";
                 promptButtons.style.display = "none";
               };
             } else {
               // Game ends after 3 rounds. Add any end-of-game logic here if needed.
-              prompt.textContent = "انتهى التحدي!";
+              prompt.textContent = "التزامك ببذل المزيد يضمن تحسنك المستمر";
               prompt.style.display = "block"; // Display after end of game
             }
           }

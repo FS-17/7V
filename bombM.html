@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <link rel="icon" href="./assets/splico.png" type="image/png" />
+    <title>نتعاون ونتشارك معًا (التعليمات)</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <style>
+      .glassContainer {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        border-radius: 15px;
+        padding: 20px;
+        width: 400px;
+        height: 400px;
+        margin: 20px auto;
+      }
+
+      #instructionGrid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 4x4 grid */
+        grid-gap: 10px; /* Adjust gap as needed */
+        width: 100%; /* Adjust width as needed */
+      }
+
+      .instructionCell {
+        width: 100%;
+        height: 90px; /* Adjust height for larger icons */
+        background: var(--dark-teal);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        color: white; /* Icon color */
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2em; /* Adjust icon size */
+        cursor: default; /* Don't show pointer cursor */
+        transition: all 0.3s ease;
+      }
+
+      .instructionCell:hover {
+        background: rgba(0, 128, 128, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .SPLines {
+        bottom: 2rem; /* Adjust as needed */
+      }
+
+      .fa-solid {
+        pointer-events: none;
+      }
+
+      .green-icon {
+        color: #4caf50; /* Material Design Green */
+        text-shadow: 0 0 10px rgba(76, 175, 80, 0.5); /* Subtle glow effect */
+      }
+
+      .red-icon {
+        color: #f44336; /* Material Design Red */
+        text-shadow: 0 0 10px rgba(244, 67, 54, 0.5); /* Subtle glow effect */
+      }
+    </style>
+  </head>
+  <body>
+    <img src="./assets/spl.png" alt="logo" class="logo" />
+    <img
+      src="./assets/Values/together.png"
+      alt="Together We Thrive"
+      class="logoV"
+    />
+
+    <h2>التعليمات:</h2>
+    <p>حاول شرح الرموز الخضراء لزميلك دون رؤية الرموز شاشته.</p>
+    <div class="glassContainer">
+      <div id="instructionGrid"></div>
+    </div>
+
+    <img src="./assets/BL2.png" alt="BL" class="SPLines" />
+
+    <script>
+      const instructionGrid = document.getElementById("instructionGrid");
+      const icons = [
+        "fas fa-envelope",
+        "fas fa-envelope-open",
+        "fas fa-envelope-open-text",
+        "fas fa-paper-plane",
+        "fas fa-shipping-fast", // Fast shipping
+        "fas fa-inbox",
+        "fas fa-stamp",
+        "fas fa-mail-bulk",
+        "fas fa-box", // Package
+        "fas fa-truck", // Delivery truck
+        "fas fa-location-arrow", // Tracking location
+        "fas fa-map-marker-alt", // Location
+        "fas fa-user-check", // Verified user (maybe for secure delivery?)
+        "fas fa-file-signature", // Signature on delivery
+        "fas fa-clipboard-list", // Checklist
+        "fas fa-address-card", // Contact info
+      ];
+
+      const greens = [0, 4, 6, 7, 8, 11, 13, 14];
+
+      function createInstructionGrid() {
+        for (let i = 0; i < 16; i++) {
+          const cell = document.createElement("div");
+          cell.classList.add("instructionCell");
+
+          const icon = document.createElement("i");
+          icon.className = icons[i];
+
+          // Add green class if index is in greens array
+          if (greens.includes(i)) {
+            icon.classList.add("green-icon");
+          } else {
+            icon.classList.add("red-icon");
+          }
+
+          cell.appendChild(icon);
+          instructionGrid.appendChild(cell);
+        }
+      }
+
+      createInstructionGrid();
+    </script>
+  </body>
+</html>

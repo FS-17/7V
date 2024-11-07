@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <link rel="icon" href="./assets/splico.png" type="image/png" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>نبدع ونبتكر لحلول المستقبل</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <style>
+      body {
+        touch-action: none;
+        /* Prevent default touch actions for better control */
+      }
+
+      .container {
+        position: relative;
+        width: 95vw;
+        height: 90vh;
+        display: flex;
+        flex-direction: column;
+        /* Changed to column */
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        overflow: hidden;
+        /* Hide overflowing elements */
+      }
+
+      .elements-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        width: 90%;
+        /* Take up most of the container width */
+      }
+
+      .element {
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.2); /* More transparent background */
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: grab;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(26, 47, 53, 0.1);
+        font-size: 24px; /* Adjust icon size */
+        color: #333; /* Icon color */
+        flex-direction: column; /* Stack icon and text vertically */
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+
+      .element i {
+        pointer-events: none; /* Prevent drag issues with icons */
+      }
+
+      .element span {
+        font-size: 14px;
+        margin-top: 5px;
+        text-align: center;
+        pointer-events: none;
+      }
+
+      .drop-area {
+        width: 50%;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1); /* More transparent background */
+        border: 2px dashed rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .drop-area.highlight {
+        background: rgba(0, 128, 0, 0.2);
+        /* Green highlight on hover */
+      }
+
+      .dropped-elements {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        /* Center the elements horizontally */
+      }
+
+      .SPLines {
+        top: 1rem;
+      }
+
+      /* Style for description input area */
+      .description-area {
+        margin-top: 20px;
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .description-input {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 5px;
+        box-sizing: border-box;
+        resize: none;
+        background: rgba(255, 255, 255, 0.4);
+        margin-bottom: 10px;
+      }
+
+      .submit-idea {
+        width: 200px; /* Fixed width for button */
+        padding: 12px 20px;
+        background-color: var(--dark-teal);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+      }
+
+      .submit-idea:hover {
+        background-color: var(--light-teal);
+      }
+    </style>
+  </head>
+
+  <body>
+    <img src="./assets/spl.png" alt="logo" class="logo" />
+    <img src="./assets/Values/we-inspire.png" alt="We Inspire" class="logoV" />
+
+    <div class="container">
+      <div class="elements-container">
+        <div class="element" draggable="true" data-element="AI">
+          <i class="fas fa-brain"></i>
+          <span>الذكاء الاصطناعي</span>
+        </div>
+        <div class="element" draggable="true" data-element="Robotics">
+          <i class="fas fa-robot"></i>
+          <span>الروبوتات</span>
+        </div>
+        <div class="element" draggable="true" data-element="Automation">
+          <i class="fas fa-cogs"></i>
+          <span>الأتمتة</span>
+        </div>
+        <div class="element" draggable="true" data-element="SPL Service">
+          <i class="fas fa-microchip"></i>
+          <span>خدمات SPL</span>
+        </div>
+        <div class="element" draggable="true" data-element="Security">
+          <i class="fas fa-shield-alt"></i>
+          <span>الأمن السيبراني</span>
+        </div>
+        <div class="element" draggable="true" data-element="IOT">
+          <i class="fas fa-network-wired"></i>
+          <span>إنترنت الأشياء</span>
+        </div>
+        <div class="element" draggable="true" data-element="Mobile">
+          <i class="fas fa-mobile-alt"></i>
+          <span>تطبيقات الجوال</span>
+        </div>
+        <div class="element" draggable="true" data-element="Innovation">
+          <i class="fas fa-lightbulb"></i>
+          <span>الابتكار</span>
+        </div>
+      </div>
+      <div class="drop-area">
+        <div class="dropped-elements"></div>
+      </div>
+      <div class="description-area">
+        <textarea
+          class="description-input"
+          placeholder="صف فكرتك هنا..."
+        ></textarea>
+        <button class="submit-idea">إرسال الفكرة</button>
+      </div>
+    </div>
+
+    <img src="./assets/BL.png" alt="BL" class="SPLines" />
+
+    <script>
+      const fbURL = "https://spl-per-default-rtdb.firebaseio.com/inspire.json";
+      const elementsContainer = document.querySelector(".elements-container");
+      const dropArea = document.querySelector(".drop-area");
+      const droppedElementsContainer =
+        document.querySelector(".dropped-elements");
+      const elements = Array.from(document.querySelectorAll(".element"));
+      const submitIdeaButton = document.querySelector(".submit-idea");
+      const descriptionInput = document.querySelector(".description-input");
+
+      elements.forEach((element) => {
+        element.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/plain", e.target.dataset.element); // Set data for the drag operation
+        });
+      });
+
+      dropArea.addEventListener("dragover", (e) => {
+        e.preventDefault(); // Necessary to allow drop
+        dropArea.classList.add("highlight");
+      });
+
+      dropArea.addEventListener("dragleave", () => {
+        dropArea.classList.remove("highlight");
+      });
+
+      dropArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropArea.classList.remove("highlight");
+        const elementType = e.dataTransfer.getData("text/plain");
+
+        // Check if the element already exists in the drop area
+        const existingElement = droppedElementsContainer.querySelector(
+          `[data-element="${elementType}"]`
+        );
+        if (!existingElement) {
+          // Only add if not already present
+          const newElement = document.createElement("div");
+          newElement.className = "element";
+          newElement.dataset.element = elementType; // Set data attribute
+          // Update this part to copy the icon instead of image
+          const iconHTML = document.querySelector(
+            `[data-element="${elementType}"]`
+          ).innerHTML;
+          newElement.innerHTML = iconHTML;
+
+          droppedElementsContainer.appendChild(newElement);
+        }
+      });
+
+      submitIdeaButton.addEventListener("click", () => {
+        const selectedElements = Array.from(
+          droppedElementsContainer.children
+        ).map((element) => element.dataset.element);
+        const description = descriptionInput.value;
+
+        if (selectedElements.length === 0) {
+          alert("الرجاء سحب وإفلات العناصر قبل إرسال الفكرة.");
+          return;
+        }
+
+        if (description.trim() === "") {
+          alert("الرجاء كتابة وصف لفكرتك.");
+
+          return;
+        }
+
+        // send it to the firebase
+        fetch(fbURL, {
+          method: "POST",
+          body: JSON.stringify({ elements: selectedElements, description }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        // Here you would send the selectedElements and description to your backend or wherever you need to store the data.
+        console.log("Selected Elements:", selectedElements);
+        console.log("Description:", description);
+        alert("تم إرسال الفكرة بنجاح!");
+        // Clear the drop area and description after submission (optional)
+        droppedElementsContainer.innerHTML = "";
+        descriptionInput.value = "";
+      });
+    </script>
+  </body>
+</html>
