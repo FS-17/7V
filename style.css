@@ -136,16 +136,16 @@ textarea {
 
 .logoV {
     position: absolute;
-    top: .3rem;
-    right: -1rem;
+    top: .9rem;
+    right: 1rem;
     z-index: 1;
-    width: 170px;
+    width: 100px;
 }
 
 /* Styles for the display page */
 .confessions-container {
     width: 90%;
-    max-width: 800px; /* Adjust as needed */
+    max-width: 1000px; /* Adjust as needed */
     height: 80vh;
     overflow-y: auto; /* Add scrollbar if content overflows */
     border: 2px solid rgba(255, 255, 255, 0.5); /* Soft white border */

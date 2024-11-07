@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <link rel="icon" href="./assets/splico.png" type="image/png" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>نلتزم ببذل المزيد</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Assuming you're using the same CSS -->
+    <style>
+      .canvas-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px; /* Adjust as needed */
+        padding: 2px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        opacity: 0.6;
+        transition: opacity 0.3s ease;
+      }
+      #drawingCanvas {
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+        background-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+      }
+      .extra-mile-prompt {
+        font-size: 1.5rem;
+        color: var(--dark-teal);
+        margin-top: 20px;
+        display: none; /* Initially hidden */
+      }
+      .SPLines {
+        top: 1rem;
+      }
+      .timer-display {
+        font-size: 2rem;
+        color: var(--dark-teal);
+        text-align: center;
+        margin: 10px 0;
+      }
+      .start-button {
+        padding: 15px 30px;
+        font-size: 1.4rem;
+        background-color: var(--dark-teal);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 0 auto;
+        display: block;
+        transition: all 0.3s ease;
+      }
+      .start-button:hover {
+        opacity: 0.9;
+      }
+      .start-section {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        max-width: 600px;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        z-index: 100;
+      }
+      .start-explanation {
+        font-size: 1.4rem;
+        color: var(--dark-teal);
+        margin-bottom: 2rem;
+        line-height: 1.8;
+        font-weight: 650;
+      }
+      .start-button {
+        padding: 15px 40px;
+        font-size: 1.5rem;
+        background-color: var(--dark-teal);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 0 auto;
+        display: block;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+      .start-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+      .container {
+        position: relative;
+        min-height: 80vh;
+      }
+      .canvas-container {
+        opacity: 0.6;
+      }
+      .canvas-container.active {
+        opacity: 1;
+        transform: scale(1.02);
+        transition: all 0.3s ease;
+      }
+      .prompt-buttons {
+        display: none;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 15px;
+      }
+
+      .prompt-btn {
+        padding: 10px 30px;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+      }
+
+      .btn-yes {
+        background-color: var(--dark-teal);
+        color: white;
+      }
+
+      .btn-no {
+        background-color: #ff6b6b;
+        color: white;
+      }
+
+      .prompt-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <img src="./assets/spl.png" alt="logo" class="logo" />
+    <img src="./assets/Values/we-commit.png" alt="We Commit" class="logoV" />
+
+    <div class="container">
+      <div class="start-section">
+        <p class="start-explanation">
+          مرحباً بك في تحدي الرسم! لديك ثلاث جولات، كل جولة مدتها 10 ثانية.
+          استخدم خيالك وارسم ما يخطر ببالك. هل أنت مستعد؟
+        </p>
+        <button class="start-button">ابدأ التحدي</button>
+      </div>
+      <div class="timer-display">10</div>
+      <div class="extra-mile-prompt">هل أنت مستعد لبذل المزيد؟</div>
+      <div class="prompt-buttons">
+        <button class="prompt-btn btn-yes">نعم</button>
+        <button class="prompt-btn btn-no">لا</button>
+      </div>
+      <div class="canvas-container">
+        <canvas id="drawingCanvas" width="900" height="550"></canvas>
+      </div>
+    </div>
+
+    <img src="./assets/BL.png" alt="BL" class="SPLines" />
+
+    <script>
+      const canvas = document.getElementById("drawingCanvas");
+      const ctx = canvas.getContext("2d");
+      const prompt = document.querySelector(".extra-mile-prompt");
+      const timerDisplay = document.querySelector(".timer-display");
+      let startTime = null;
+      let drawingTime = 10; // Seconds per round
+      let round = 1;
+      let isDrawing = false;
+      const startButton = document.querySelector(".start-button");
+      const promptButtons = document.querySelector(".prompt-buttons");
+
+      // Initially hide timer
+      timerDisplay.style.display = "none";
+
+      // Add click event listener to start button
+      startButton.addEventListener("click", () => {
+        document.querySelector(".start-section").style.display = "none";
+        timerDisplay.style.display = "block";
+        document.querySelector(".canvas-container").classList.add("active");
+        startDrawing();
+      });
+
+      function startDrawing() {
+        isDrawing = true;
+        startTime = Date.now();
+        prompt.style.display = "none"; // Hide the prompt
+        promptButtons.style.display = "none";
+        timerDisplay.textContent = drawingTime;
+        canvas.addEventListener("mousedown", handleMouseDown);
+        canvas.addEventListener("mousemove", handleMouseMove);
+        canvas.addEventListener("mouseup", handleMouseUp);
+        canvas.addEventListener("touchstart", handleTouchStart);
+        canvas.addEventListener("touchmove", handleTouchMove);
+        canvas.addEventListener("touchend", handleTouchEnd);
+
+        const timerInterval = setInterval(() => {
+          const elapsed = Math.floor((Date.now() - startTime) / 1000);
+          const remaining = drawingTime - elapsed;
+          timerDisplay.textContent = remaining >= 0 ? remaining : 0;
+          if (elapsed >= drawingTime) {
+            clearInterval(timerInterval);
+            canvas.removeEventListener("mousedown", handleMouseDown);
+            canvas.removeEventListener("mousemove", handleMouseMove);
+            canvas.removeEventListener("mouseup", handleMouseUp);
+            canvas.removeEventListener("touchstart", handleTouchStart);
+            canvas.removeEventListener("touchmove", handleTouchMove);
+            canvas.removeEventListener("touchend", handleTouchEnd);
+            isDrawing = false; // Stop current drawing phase
+
+            if (round < 3) {
+              // Check if it's less than 3 rounds, adjust as needed
+              round++;
+              showPrompt();
+              document.querySelector(".btn-yes").onclick = () => {
+                promptButtons.style.display = "none";
+                startDrawing();
+              };
+              document.querySelector(".btn-no").onclick = () => {
+                prompt.textContent = "انتهى التحدي!";
+                promptButtons.style.display = "none";
+              };
+            } else {
+              // Game ends after 3 rounds. Add any end-of-game logic here if needed.
+              prompt.textContent = "انتهى التحدي!";
+              prompt.style.display = "block"; // Display after end of game
+            }
+          }
+        }, 1000); // Check every second
+      }
+
+      function showPrompt() {
+        prompt.style.display = "block";
+        promptButtons.style.display = "flex";
+      }
+
+      let isMouseDown = false;
+
+      function handleMouseDown(e) {
+        isMouseDown = true;
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+      }
+
+      function handleMouseMove(e) {
+        if (isMouseDown && isDrawing) {
+          // Only draw if the mouse is down and the drawing phase is active
+          ctx.lineTo(e.offsetX, e.offsetY);
+          ctx.stroke();
+        }
+      }
+
+      function handleMouseUp() {
+        isMouseDown = false;
+      }
+
+      function handleTouchStart(e) {
+        isMouseDown = true;
+        ctx.beginPath();
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+      }
+
+      function handleTouchMove(e) {
+        e.preventDefault(); // Prevent scrolling
+        if (isMouseDown && isDrawing) {
+          const touch = e.touches[0];
+          const rect = canvas.getBoundingClientRect();
+          ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+          ctx.stroke();
+        }
+      }
+
+      function handleTouchEnd() {
+        isMouseDown = false;
+      }
+
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = getComputedStyle(
+        document.documentElement
+      ).getPropertyValue("--dark-teal");
+      ctx.lineCap = "round"; // For smoother lines
+    </script>
+  </body>
+</html>

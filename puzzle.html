@@ -181,7 +181,7 @@
     </div>
     <div class="game-over">
       <div class="game-over-content">
-        <h2>Game Over!</h2>
+        <h2 class="restart-title">Game Over!</h2>
         <p class="result-message"></p>
         <button class="restart-btn">Play Again</button>
       </div>
@@ -201,6 +201,7 @@
       const timerDisplay = document.querySelector(".timer");
       const gameOver = document.querySelector(".game-over");
       const resultMessage = document.querySelector(".result-message");
+      const resultTitle = document.querySelector(".result-title");
       const restartBtn = document.querySelector(".restart-btn");
 
       function initializeGame() {
@@ -322,8 +323,9 @@
         clearInterval(gameInterval);
         gameOver.style.display = "flex";
         resultMessage.textContent = won
-          ? "Congratulations! You completed the puzzle!"
-          : "Time's up! Better luck next time!";
+          ? "أثبت بجدارة أنك تعمل بخطى سريعة 👏!"
+          : "حظ أوفر في المرة القادمة 😅";
+        resultTitle.textContent = won ? "مبروك!" : "حظ أوفر!";
       }
 
       function shuffleArray(array) {

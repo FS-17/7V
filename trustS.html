@@ -19,12 +19,48 @@
       .SPLines {
         bottom: 1rem;
       }
+
+      .qr-container {
+        position: fixed;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1000;
+        text-align: center;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .qr-text {
+        color: #333;
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      .qr-code {
+        width: 150px;
+        height: 150px;
+      }
+
+      .confessions-container {
+        margin-right: 100px !important;
+      }
     </style>
   </head>
 
   <body>
     <img src="./assets/spl.png" alt="logo" class="logo" />
     <img src="./assets/Values/we-trust.png" alt="We Trust" class="logoV" />
+
+    <div class="qr-container">
+      <div class="qr-text">امسح الرمز للمشاركة</div>
+      <img src="./assets/qrT.png" alt="QR Code" class="qr-code" />
+    </div>
 
     <div class="confessions-container"></div>
     <img src="./assets/BL3.png" alt="BL" class="SPLines" />
