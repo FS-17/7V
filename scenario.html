@@ -96,6 +96,23 @@
       .SPLines {
         top: 1rem;
       }
+
+      .wait-feedback {
+        display: none;
+        font-size: 1.5rem;
+        color: var(--dark-teal);
+        text-align: center;
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(15px);
+        padding: 10px 20px;
+        border-radius: 15px;
+        width: 80%;
+        max-width: 800px;
+        margin-top: 20px;
+      }
     </style>
   </head>
   <body>
@@ -106,7 +123,8 @@
     <div class="container">
       <div class="scenario">Loading scenario...</div>
       <textarea class="solution-input" placeholder="اكتب حلك هنا..."></textarea>
-      <button class="submit-btn">إرسال</button>
+
+      <!-- Feedback display -->
       <div class="feedback">
         <div class="feedback-rating"></div>
         <div class="percentage-container">
@@ -114,6 +132,16 @@
           <div class="percentage-text"></div>
         </div>
       </div>
+
+      <!-- wait for the feedback -->
+      <div class="wait-feedback" style="display: none">
+        <div class="glass">
+          <p>جاري التقييم...</p>
+        </div>
+      </div>
+
+      <button class="submit-btn">إرسال</button>
+
       <button class="next-btn" style="display: none">التالي</button>
     </div>
     <img src="./assets/BL.png" alt="BL" class="SPLines" />
@@ -151,9 +179,8 @@
           .join("");
       }
 
-      const url = encrypt(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCIqN0KAsFW4sSQGBTyoegstMo6QFtOlpk"
-      );
+      const url =
+        "OyQ4LyB/bH0iMTEuNzgnOTo6PyQtNTA1OC5rPjw/KzM2JDM7Nno8JCh2JWEuOickbD8qMDonNnY0NSE2PSxuY2thci0pOCA4djg2KyYgJCA6CCo3JzUiK2wuJit4FRYxJAoqEwcSZCAWOh8eCHI0PDspHm82HTsXNwcsJj8pOBN0Bhx9";
 
       async function callGoogleAI(prompt) {
         const requestBody = {
@@ -205,6 +232,7 @@
       const submitBtn = document.querySelector(".submit-btn");
       const feedbackDiv = document.querySelector(".feedback");
       const nextBtn = document.querySelector(".next-btn");
+      const waitFeedbackDiv = document.querySelector(".wait-feedback"); // Added
 
       async function getScenario() {
         const randomIndex = Math.floor(Math.random() * senarios.length);
@@ -214,19 +242,21 @@
 
       submitBtn.addEventListener("click", async () => {
         const solution = solutionInput.value;
-        feedbackDiv.style.display = "block";
+        waitFeedbackDiv.style.display = "block";
         feedbackDiv.querySelector(".feedback-rating").textContent =
           "جاري التقييم...";
 
         const evaluationPrompt = `
               السيناريو: ${scenarioDiv.textContent}
               الحل المقترح: ${solution}
-              قيم الحل واعطني نتيجة التقييم بالعربية في أقل من 20 كلمة. يجب أن يكون التقييم إيجابياً وبناءً و عطني نسبه بين ال 20 و ال 100 بالنسبة للحل المقترح. واجعله بصيغة json
+              قيم الحل واعطني نتيجة التقييم بالعربية في أقل من 20 كلمة. يجب أن يكون التقييم إيجابياً وبناءً و عطني نسبه بين ال 11 و ال 100 بالنسبة للحل المقترح. واجعله بصيغة json
               مثال:
               {
                 "rating": "الحل جيد ومفيد. يجب تقديم حلول أكثر تفصيلاً.",
                 "percentage": 80
               }
+
+              لا ترد الا بهذه الصيغة مهما حصل 
           `;
 
         const feedback = await callGoogleAI(evaluationPrompt);
@@ -241,6 +271,9 @@
         percentageText.textContent = `${feedback.percentage}%`;
 
         solutionInput.readOnly = true; // Make the textarea uneditable
+
+        waitFeedbackDiv.style.display = "none"; // Hide wait-feedback
+        feedbackDiv.style.display = "block";
 
         nextBtn.style.display = "block";
         submitBtn.style.display = "none";
