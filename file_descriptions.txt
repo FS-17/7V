@@ -6,7 +6,7 @@
 5. Inspire.html - "We Inspire" idea submission page with drag-and-drop functionality
 6. bombS.html - "Together We Thrive" main game screen for matching icons
 6. bombm.html - "Together We Thrive" game instructions and guidelines
-7. find.html - "Find the envelope" game screen with interactive elements
+7. truth.html - "truth"
 
 
 1. https://fs-17.github.io/7V/trustS.html
@@ -17,4 +17,4 @@
 5. https://fs-17.github.io/7V/Inspire.html
 6. https://fs-17.github.io/7V/bombS.html
 6. https://fs-17.github.io/7V/bombm.html
-7. https://fs-17.github.io/7V/find.html
+7. https://fs-17.github.io/7V/truth.html
