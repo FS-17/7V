@@ -1,0 +1,20 @@
+1. trustS.html - Trust screen  
+1. trustM.html - Trust module  
+2. scenario.html - Scenario setup and logic for the application
+3. puzzle.html - Puzzle game interface with timer and gameplay mechanics
+4. more.html - "We Commit" drawing challenge page with interactive elements
+5. Inspire.html - "We Inspire" idea submission page with drag-and-drop functionality
+6. bombS.html - "Together We Thrive" main game screen for matching icons
+6. bombm.html - "Together We Thrive" game instructions and guidelines
+7. find.html - "Find the envelope" game screen with interactive elements
+
+
+1. https://fs-17.github.io/7V/trustS.html
+1. https://fs-17.github.io/7V/trustM.html
+2. https://fs-17.github.io/7V/scenario.html
+3. https://fs-17.github.io/7V/puzzle.html
+4. https://fs-17.github.io/7V/more.html
+5. https://fs-17.github.io/7V/Inspire.html
+6. https://fs-17.github.io/7V/bombS.html
+6. https://fs-17.github.io/7V/bombm.html
+7. https://fs-17.github.io/7V/find.html

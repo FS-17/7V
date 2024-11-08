@@ -103,16 +103,6 @@
         color: var(--dark-teal);
         text-align: center;
       }
-
-      .glass {
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(15px);
-        padding: 10px 20px;
-        border-radius: 15px;
-        width: 80%;
-        max-width: 800px;
-        margin-top: 20px;
-      }
     </style>
   </head>
   <body>
@@ -135,9 +125,7 @@
 
       <!-- wait for the feedback -->
       <div class="wait-feedback" style="display: none">
-        <div class="glass">
-          <p>جاري التقييم...</p>
-        </div>
+        <p>جاري التقييم...</p>
       </div>
 
       <button class="submit-btn">إرسال</button>
@@ -201,6 +189,7 @@
 
           const data = await response.json();
           var jsonFeedback = data.candidates[0].content.parts[0].text;
+          debugger;
 
           // jsonFeedback = "```json
           // {
@@ -232,7 +221,6 @@
       const submitBtn = document.querySelector(".submit-btn");
       const feedbackDiv = document.querySelector(".feedback");
       const nextBtn = document.querySelector(".next-btn");
-      const waitFeedbackDiv = document.querySelector(".wait-feedback"); // Added
 
       async function getScenario() {
         const randomIndex = Math.floor(Math.random() * senarios.length);
@@ -242,7 +230,7 @@
 
       submitBtn.addEventListener("click", async () => {
         const solution = solutionInput.value;
-        waitFeedbackDiv.style.display = "block";
+        feedbackDiv.style.display = "block";
         feedbackDiv.querySelector(".feedback-rating").textContent =
           "جاري التقييم...";
 
@@ -271,9 +259,6 @@
         percentageText.textContent = `${feedback.percentage}%`;
 
         solutionInput.readOnly = true; // Make the textarea uneditable
-
-        waitFeedbackDiv.style.display = "none"; // Hide wait-feedback
-        feedbackDiv.style.display = "block";
 
         nextBtn.style.display = "block";
         submitBtn.style.display = "none";

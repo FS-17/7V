@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <link rel="icon" href="./assets/splico.png" type="image/png" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>نتخطى دومًا التحديات</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .scenario-card {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(15px);
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        font-size: 1.4rem;
+        color: var(--dark-teal);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(26, 47, 53, 0.2);
+        width: 80%;
+        max-width: 800px;
+        margin: 20px auto;
+      }
+
+      .choice-button {
+        margin-top: 20px;
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        background-color: var(--dark-teal);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .choice-button:hover {
+        opacity: 0.8;
+        transform: translateY(-2px);
+      }
+
+      .start-button {
+        padding: 15px 30px;
+        font-size: 1.5rem;
+        background-color: var(--dark-teal);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 30px auto 0;
+        display: block;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .start-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      #stamp {
+        display: none;
+      }
+
+      .feedback-message {
+        display: none;
+        text-align: center;
+        padding: 20px;
+        margin: 20px auto;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+
+      .success {
+        background-color: #dff0d8;
+        color: #3c763d;
+        border: 1px solid #d6e9c6;
+      }
+
+      .error {
+        background-color: #f2dede;
+        color: #a94442;
+        border: 1px solid #ebccd1;
+      }
+
+      .SPLines {
+        top: 1rem;
+      }
+
+      .container {
+        min-height: calc(100vh - 4rem);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 0;
+        margin-bottom: 20px;
+      }
+
+      body {
+        overflow: hidden;
+      }
+
+      .section-wrapper {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <img src="./assets/spl.png" alt="logo" class="logo" />
+    <img
+      src="./assets/Values/we-navigate.png"
+      alt="We Navigate"
+      class="logoV"
+    />
+    <img src="./assets/BL.png" alt="BL" class="SPLines" />
+
+    <div class="container">
+      <button class="start-button">ابدأ التحدي</button>
+
+      <div class="section-wrapper">
+        <div class="scenario-card">
+          <p id="scenario-text"></p>
+        </div>
+        <div id="choices-container"></div>
+        <div id="feedback" class="feedback-message"></div>
+      </div>
+    </div>
+
+    <script>
+      const scenarios = [
+        {
+          scenario:
+            "أحد أعضاء الفريق لا يلتزم بالمواعيد المحددة لتسليم المهام.",
+          choices: [
+            "تُرفع الأمر للمدير.",
+            "تتحاور معه لفهم أسباب التأخير وتعرض المساعدة.",
+            "تتجاهله وتُكمل عملك.",
+          ],
+          correctChoice: 1, // Corrected to 1 (second choice, 0-indexed)
+          value: "نتعاون ونتشارك معًا",
+        },
+        {
+          scenario: "موظف جديد يحتاج إلى التدريب ويستغرق وقتًا طويلًا للتعلم.",
+          choices: [
+            "تطلب نقله لفريق آخر.",
+            "تعرض المساعدة والتوجيه.",
+            "تتجنب التعامل معه.",
+          ],
+          correctChoice: 1,
+          value: "نتحلى بالثقة والشفافية",
+        },
+        {
+          scenario:
+            "في اجتماع عمل، هناك خلاف بين الأعضاء حول طريقة تنفيذ مشروع ما.",
+          choices: [
+            "تصوت لطريقة معينة وتلتزم بها.",
+            "تستمع لكل الآراء وتحاول الوصول لحل وسط.",
+            "تتمسك برأيك وتتجاهل الآراء الأخرى.",
+          ],
+          correctChoice: 1,
+          value: "نتعاون ونتشارك معًا",
+        },
+        {
+          scenario: "يتعرض أحد أعضاء الفريق لضغوط تؤثر على أدائه في العمل.",
+          choices: [
+            "تقترح عليه أخذ إجازة قصيرة.",
+            "تساعده في تقسيم المهام بينك وبينه.",
+            "تتركه يتعامل مع المشكلة بنفسه.",
+          ],
+          correctChoice: 1,
+          value: "نلتزم ببذل المزيد",
+        },
+        {
+          scenario:
+            "تكتشف خطأً في التقرير الذي أعده أحد زملائك، وقد يضر بنتائج المشروع.",
+          choices: [
+            "تصحح الخطأ بنفسك وتواصل العمل.",
+            "تبلغه بالخطأ وتساعده على التصحيح.",
+            "ترفع تقريرًا عنه للإدارة.",
+          ],
+          correctChoice: 1,
+          value: "نتحلى بالثقة والشفافية",
+        },
+        {
+          scenario:
+            "يطلب منك مديرك العمل لساعات إضافية لإنجاز مشروع، رغم أنك متعب.",
+          choices: [
+            "ترفض مباشرة.",
+            "تقبل وتتعاون مع فريقك لإنجاز العمل.",
+            "توضح صعوبة العمل وتطلب تمديد الموعد.",
+          ],
+          correctChoice: 1,
+          value: "نلتزم ببذل المزيد",
+        },
+        {
+          scenario:
+            "زميل في الفريق يتهرب من المهام الصعبة ويقوم فقط بالمهام السهلة.",
+          choices: [
+            "تواجهه بما يفعله.",
+            "تطلب توزيع المهام بشكل عادل.",
+            "تتجاهل الأمر وتكمل مهامك.",
+          ],
+          correctChoice: 1,
+          value: "نتخطى دومًا التحديات",
+        },
+        {
+          scenario: "مديرك يطلب منك إنجاز عمل لم تكن متأكدًا من كيفية إتمامه.",
+          choices: [
+            "تحاول إتمامه بنفسك.",
+            "تطلب مساعدة من زملائك.",
+            "ترفض وتطلب تدريبًا قبل التنفيذ.",
+          ],
+          correctChoice: 1,
+          value: "نبدع ونبتكر لحلول المستقبل",
+        },
+        {
+          scenario: "تُطلب منك مهام إضافية لم تكن من مسؤولياتك الأصلية.",
+          choices: [
+            "ترفض مباشرة.",
+            "تقبل التحدي لإنجاز المهام الجديدة.",
+            "تشكو للإدارة حول الضغط.",
+          ],
+          correctChoice: 1,
+          value: "نلتزم ببذل المزيد",
+        },
+        {
+          scenario:
+            "هناك نقص في الأدوات اللازمة لإنجاز العمل، وتحتاج لمساعدة فريق آخر.",
+          choices: [
+            "تنتظر توفير الأدوات.",
+            "تتعاون مع فريق آخر لتشارك الأدوات.",
+            "تعتذر عن العمل حتى توفر الأدوات.",
+          ],
+          correctChoice: 1,
+          value: "نتعاون ونتشارك معًا",
+        },
+        {
+          scenario: "تلاحظ سلوكًا غير لائق من زميل يسيء إلى سمعة الشركة.",
+          choices: [
+            "تواجهه مباشرة.",
+            "تبلغ الموارد البشرية وتطلب متابعة الأمر بسرية.",
+            "تتجاهل الموضوع.",
+          ],
+          correctChoice: 1,
+          value: "نتحلى بالثقة والشفافية",
+        },
+        {
+          scenario:
+            "في اجتماع شهري، لم يُعترف بمجهودك رغم أنك أنجزت مهامًا إضافية.",
+          choices: [
+            "تواجه المدير حول عدم الاعتراف بجهودك.",
+            "تستمر بالعمل وتحسن الأداء لتبرز في المستقبل.",
+            "تشتكي لزملائك حول التمييز.",
+          ],
+          correctChoice: 1,
+          value: "نلتزم ببذل المزيد",
+        },
+        {
+          scenario: "تواجه صعوبة في فهم التعليمات المقدمة لمهمة جديدة.",
+          choices: [
+            "تنفذها بطريقة تجتهد فيها.",
+            "تسأل المدير للتوضيح.",
+            "تتجنب تنفيذها حتى يتواصل معك المسؤول.",
+          ],
+          correctChoice: 1,
+          value: "نتحلى بالثقة والشفافية",
+        },
+        {
+          scenario:
+            "زميلك في الفريق يطلب منك تولي مهامه لأنه مشغول، لكنها تؤثر على مواعيدك.",
+          choices: [
+            "ترفض وتلتزم بمهامك الأصلية.",
+            "تتعاون معه بحدود للمساعدة.",
+            "تطلب منه تخفيض عبء العمل عليك.",
+          ],
+          correctChoice: 1, //You had this as 2, but based on your answers, it should be 1
+          value: "نتعاون ونتشارك معًا",
+        },
+        {
+          scenario: "تكتشف أن زميلك لم يتبع إجراءات السلامة في مهمة معينة.",
+          choices: [
+            "تواجهه وتطلب الالتزام بالقواعد.",
+            "تبلغ مديرك وتطلب التوجيه.",
+            "تتجاهل الموضوع وتكمل عملك.",
+          ],
+          correctChoice: 0,
+          value: "نتحلى بالثقة والشفافية",
+        },
+        {
+          scenario: "يُطلب منك دعم مشروع لفرع آخر للشركة خارج دوامك.",
+          choices: [
+            "ترفض.",
+            "تقبل المساعدة كجزء من دعم الفريق.",
+            "تطلب توضيح حدود مهامك في المشروع.",
+          ],
+          correctChoice: 1,
+          value: "نلتزم ببذل المزيد",
+        },
+        {
+          scenario: "زميلك يتكاسل عن تحديث تقارير مهمة ويعرض مشروعًا للخطر.",
+          choices: [
+            "تقدم تقريرًا نيابة عنه.",
+            "تنبهه بأهمية التحديث.",
+            "ترفع تقريرًا للإدارة عن تكاسله.",
+          ],
+          correctChoice: 1,
+          value: "نتخطى دومًا التحديات",
+        },
+        {
+          scenario: "أثناء عمل جماعي، تجد نفسك تتحمل الجزء الأكبر من المهام.",
+          choices: [
+            "تطلب توزيع المهام بشكل عادل.",
+            "تقوم بالمهمة كاملة لإنجازها في الوقت المطلوب.",
+            "تتوقف عن العمل حتى يتم التوزيع العادل.",
+          ],
+          correctChoice: 0,
+          value: "نتحلى بالثقة والشفافية",
+        },
+        {
+          scenario:
+            "زميل يسيء فهمك ويدخل في خلاف شخصي معك حول طريقة تنفيذ عمل.",
+          choices: [
+            "تتحدث معه لتوضيح وجهة نظرك.",
+            "تتجاهل النقاش وتكمل العمل.",
+            "ترفع الأمر لمديرك لحل الخلاف.",
+          ],
+          correctChoice: 0,
+          value: "نتحلى بالثقة والشفافية",
+        },
+        {
+          scenario:
+            "تحتاج إلى مساعدة في مشروع معقد، لكن زملاءك مشغولون بمشاريعهم.",
+          choices: [
+            "تحاول حل المشروع بمفردك.",
+            "تقترح تبادل المساعدة بينكم.",
+            "تتأخر في المشروع حتى يتوفر الوقت لديهم.",
+          ],
+          correctChoice: 1,
+          value: "نتعاون ونتشارك معًا",
+        },
+      ];
+
+      const startButton = document.querySelector(".start-button");
+      const scenarioCard = document.querySelector(".scenario-card");
+      const choicesContainer = document.getElementById("choices-container");
+      const sectionWrapper = document.querySelector(".section-wrapper");
+      let currentScenario = null;
+
+      startButton.addEventListener("click", () => {
+        startButton.style.display = "none"; // Hide start button
+        sectionWrapper.style.display = "block"; // show everything else
+
+        loadScenario();
+      });
+
+      function loadScenario() {
+        if (scenarios.length === 0) {
+          // Handle case where all scenarios have been used (optional)
+          scenarioCard.textContent = "لقد أكملت جميع التحديات!";
+          choicesContainer.innerHTML = ""; // Clear choices
+          return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * scenarios.length);
+        currentScenario = scenarios[randomIndex];
+
+        document.getElementById("scenario-text").textContent =
+          currentScenario.scenario;
+
+        choicesContainer.innerHTML = ""; // Clear previous choices
+        currentScenario.choices.forEach((choice, index) => {
+          // Exclude the last element (correct answer index)
+          const button = document.createElement("button");
+          button.textContent = choice;
+
+          debugger;
+          button.classList.add("choice-button");
+          button.addEventListener("click", () => handleChoice(index)); // Pass the choice number (1-based index)
+          choicesContainer.appendChild(button);
+        });
+      }
+
+      function handleChoice(choice) {
+        const isCorrect = choice === currentScenario.correctChoice;
+        debugger;
+        const feedback = document.getElementById("feedback");
+
+        const choiceButtons = document.querySelectorAll(".choice-button");
+        choiceButtons.forEach((button) => (button.disabled = true));
+
+        const value = currentScenario.value;
+
+        feedback.className =
+          "feedback-message " + (isCorrect ? "success" : "error");
+        feedback.textContent = isCorrect
+          ? `احسنت! تخطيت التحدي بالتزامك بقيمة .. ${value}`
+          : "إجابة خاطئة";
+        feedback.style.display = "block";
+
+        setTimeout(() => {
+          feedback.style.display = "none";
+          loadScenario();
+          choiceButtons.forEach((button) => (button.disabled = false));
+        }, 4000);
+
+        const indexToRemove = scenarios.indexOf(currentScenario);
+      }
+    </script>
+  </body>
+</html>
