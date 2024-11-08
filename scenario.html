@@ -48,11 +48,49 @@
       }
 
       .feedback {
-        /* Style for feedback area */
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(15px);
+        padding: 20px;
+        border-radius: 15px;
+        width: 80%;
+        max-width: 800px;
         margin-top: 20px;
+        display: none; /* Initially hidden */
+      }
+
+      .feedback-rating {
         font-size: 1.2rem;
         color: var(--dark-teal);
+        margin-bottom: 15px;
         text-align: center;
+      }
+
+      .percentage-container {
+        width: 100%;
+        height: 30px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .percentage-bar {
+        height: 100%;
+        background: var(--dark-teal);
+        transition: width 0.8s ease-in-out;
+        border-radius: 15px;
+      }
+
+      .percentage-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: var(--dark-teal);
+        font-weight: bold;
+        font-size: 1.5rem; /* Increased font size for better readability */
+        color: #ffffff; /* Changed color to white for better contrast */
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Added text shadow for clarity */
       }
 
       .SPLines {
@@ -69,59 +107,149 @@
       <div class="scenario">Loading scenario...</div>
       <textarea class="solution-input" placeholder="اكتب حلك هنا..."></textarea>
       <button class="submit-btn">إرسال</button>
-      <div class="feedback"></div>
+      <div class="feedback">
+        <div class="feedback-rating"></div>
+        <div class="percentage-container">
+          <div class="percentage-bar"></div>
+          <div class="percentage-text"></div>
+        </div>
+      </div>
       <button class="next-btn" style="display: none">التالي</button>
     </div>
     <img src="./assets/BL.png" alt="BL" class="SPLines" />
 
     <script>
+      const encryptionKey = "SPL_SECRET_KEY";
+
+      const senarios = [
+        "حدث مع عميل تأخر استلام شحنة مهمة جداً، وهي عبارة عن قطع غيار لسيارته تعطلت على الطريق. العميل غاضب جداً. ماذا ستفعل؟",
+      ];
+
+      function encrypt(text) {
+        return btoa(
+          text
+            .split("")
+            .map((char, i) =>
+              String.fromCharCode(
+                char.charCodeAt(0) ^
+                  encryptionKey.charCodeAt(i % encryptionKey.length)
+              )
+            )
+            .join("")
+        );
+      }
+
+      function decrypt(encoded) {
+        return atob(encoded)
+          .split("")
+          .map((char, i) =>
+            String.fromCharCode(
+              char.charCodeAt(0) ^
+                encryptionKey.charCodeAt(i % encryptionKey.length)
+            )
+          )
+          .join("");
+      }
+
+      const url = encrypt(
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCIqN0KAsFW4sSQGBTyoegstMo6QFtOlpk"
+      );
+
+      async function callGoogleAI(prompt) {
+        const requestBody = {
+          contents: [
+            {
+              parts: [{ text: prompt }],
+            },
+          ],
+        };
+        try {
+          const response = await fetch(decrypt(url), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          });
+
+          const data = await response.json();
+          var jsonFeedback = data.candidates[0].content.parts[0].text;
+
+          // jsonFeedback = "```json
+          // {
+          //   "التقييم": "الحل غير واضح وغير مفيد. يجب تقديم حلول عملية لحل مشكلة العميل.",
+          //   "النسبة": 20
+          // }
+          // ```
+          // "
+
+          // make it normal json
+          jsonFeedback = jsonFeedback
+            .replace(/```json/g, "")
+            .replace(/```/g, "");
+
+          jsonFeedback = JSON.parse(jsonFeedback);
+
+          return jsonFeedback;
+        } catch (error) {
+          console.error(" Error:", error);
+          return {
+            rating: "حدث خطأ أثناء التقييم. يرجى المحاولة مرة أخرى.",
+            percentage: 0,
+          };
+        }
+      }
+
       const scenarioDiv = document.querySelector(".scenario");
       const solutionInput = document.querySelector(".solution-input");
       const submitBtn = document.querySelector(".submit-btn");
       const feedbackDiv = document.querySelector(".feedback");
       const nextBtn = document.querySelector(".next-btn");
 
-      // Function to fetch and display a scenario (replace with your actual logic)
       async function getScenario() {
-        // Placeholder - replace with your ChatGPT API call
-        const scenario = await new Promise((resolve) => {
-          setTimeout(
-            () =>
-              resolve(
-                "حدث مع عميل تأخر استلام شحنة مهمة جداً، وهي عبارة عن قطع غيار لسيارته تعطلت على الطريق. العميل غاضب جداً. ماذا ستفعل؟"
-              ),
-            2000
-          ); // Simulate API call delay
-        });
+        const randomIndex = Math.floor(Math.random() * senarios.length);
+        const scenario = senarios[randomIndex];
         scenarioDiv.textContent = scenario;
       }
 
       submitBtn.addEventListener("click", async () => {
         const solution = solutionInput.value;
-        feedbackDiv.textContent = "جاري التقييم..."; // Show loading message
+        feedbackDiv.style.display = "block";
+        feedbackDiv.querySelector(".feedback-rating").textContent =
+          "جاري التقييم...";
 
-        // chatgpt will get the user input and evaluate it and give 2 outputs "persentage" "feedback"
-        // the chatGPT prompt: "the is the scenario: " + scenario + "and this is the user solution: " + solution + "i want you to evaluate it and give me a percentage of how good the solution is and a feedback your output should be in arabic and less than 20 word, and should be a positive feedback and be in json format"
+        const evaluationPrompt = `
+              السيناريو: ${scenarioDiv.textContent}
+              الحل المقترح: ${solution}
+              قيم الحل واعطني نتيجة التقييم بالعربية في أقل من 20 كلمة. يجب أن يكون التقييم إيجابياً وبناءً و عطني نسبه بين ال 20 و ال 100 بالنسبة للحل المقترح. واجعله بصيغة json
+              مثال:
+              {
+                "rating": "الحل جيد ومفيد. يجب تقديم حلول أكثر تفصيلاً.",
+                "percentage": 80
+              }
+          `;
 
-        // Placeholder - replace with your ChatGPT API call for evaluation
-        const feedback = await new Promise((resolve) => {
-          setTimeout(
-            () =>
-              resolve(
-                "حل ممتاز! لقد أظهرت تفهمًا  لموقف العميل، وركزت على إيجاد حلول سريعة وفعالة. "
-              ),
-            2000
-          );
-        });
+        const feedback = await callGoogleAI(evaluationPrompt);
 
-        feedbackDiv.textContent = feedback;
-        nextBtn.style.display = "block"; // Show the next button after feedback
-        submitBtn.style.display = "none"; // Hide submit button
+        // Update feedback display
+        feedbackDiv.querySelector(".feedback-rating").textContent =
+          feedback.rating;
+        const percentageBar = feedbackDiv.querySelector(".percentage-bar");
+        const percentageText = feedbackDiv.querySelector(".percentage-text");
+
+        percentageBar.style.width = `${feedback.percentage}%`;
+        percentageText.textContent = `${feedback.percentage}%`;
+
+        solutionInput.readOnly = true; // Make the textarea uneditable
+
+        nextBtn.style.display = "block";
+        submitBtn.style.display = "none";
       });
 
       nextBtn.addEventListener("click", () => {
         solutionInput.value = ""; // Clear the input
-        feedbackDiv.textContent = ""; // Clear the feedback
+        solutionInput.readOnly = false; // Make the textarea editable
+        feedbackDiv.style.display = "none"; // Hide the feedback
         nextBtn.style.display = "none"; // Hide the next button
         submitBtn.style.display = "block"; // Show submit button
         getScenario(); // Load the next scenario

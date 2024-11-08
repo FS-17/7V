@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SPL Postal Navigation Escape Room</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      body {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        background: #1a1a1a;
+        touch-action: none;
+      }
+
+      #game-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: #f0f0f0;
+      }
+
+      #room {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: url("/api/placeholder/1920/1080") center/cover;
+      }
+
+      .interactive-item {
+        position: absolute;
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+
+      .interactive-item:hover {
+        transform: scale(1.1);
+      }
+
+      #timer {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        border-radius: 20px;
+        font-size: 24px;
+      }
+
+      #inventory {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+      }
+
+      .inventory-slot {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid #fff;
+        border-radius: 8px;
+      }
+
+      .modal {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        display: none;
+        text-align: center;
+      }
+
+      #puzzle-modal {
+        min-width: 300px;
+        min-height: 200px;
+      }
+
+      .keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .keypad-button {
+        padding: 15px;
+        font-size: 20px;
+        background: #eee;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .keypad-button:active {
+        background: #ddd;
+      }
+
+      #hint-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+
+      #success-modal {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+      }
+
+      #success-modal h2 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+      }
+
+      #restart-button {
+        padding: 10px 20px;
+        background: #2ecc71;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-container">
+      <div id="room">
+        <!-- Interactive items will be added dynamically -->
+      </div>
+      <div id="timer">5:00</div>
+      <button id="hint-button">Get Hint</button>
+      <div id="inventory">
+        <div class="inventory-slot"></div>
+        <div class="inventory-slot"></div>
+        <div class="inventory-slot"></div>
+      </div>
+
+      <div id="puzzle-modal" class="modal">
+        <h3 id="puzzle-title"></h3>
+        <div id="puzzle-content"></div>
+        <div id="keypad" class="keypad"></div>
+      </div>
+
+      <div id="success-modal" class="modal">
+        <h2>Congratulations!</h2>
+        <p>You've successfully completed the SPL Navigation Challenge!</p>
+        <button id="restart-button">Play Again</button>
+      </div>
+    </div>
+
+    <script>
+      class EscapeRoom {
+        constructor() {
+          this.timeLeft = 300; // 5 minutes in seconds
+          this.items = [];
+          this.inventory = [];
+          this.currentPuzzle = null;
+          this.puzzlesSolved = 0;
+          this.hints = {
+            puzzle1: "Look for patterns in the postal codes",
+            puzzle2: "Arrange the packages by their delivery zones",
+            puzzle3: "The final code relates to SPL's founding year",
+          };
+
+          this.initializeGame();
+        }
+
+        initializeGame() {
+          this.setupInteractiveItems();
+          this.setupTimer();
+          this.setupEventListeners();
+          this.startBackgroundMusic();
+        }
+
+        setupInteractiveItems() {
+          const items = [
+            {
+              id: "mailbox",
+              type: "puzzle1",
+              position: { x: 20, y: 30 },
+              size: { width: 100, height: 150 },
+            },
+            {
+              id: "packages",
+              type: "puzzle2",
+              position: { x: 60, y: 50 },
+              size: { width: 120, height: 80 },
+            },
+            {
+              id: "terminal",
+              type: "puzzle3",
+              position: { x: 80, y: 40 },
+              size: { width: 150, height: 100 },
+            },
+          ];
+
+          items.forEach((item) => {
+            this.createInteractiveItem(item);
+          });
+        }
+
+        createInteractiveItem(item) {
+          const element = document.createElement("div");
+          element.className = "interactive-item";
+          element.id = item.id;
+          element.style.left = `${item.position.x}%`;
+          element.style.top = `${item.position.y}%`;
+          element.style.width = `${item.size.width}px`;
+          element.style.height = `${item.size.height}px`;
+          element.style.background = `url('/api/placeholder/${item.size.width}/${item.size.height}')`;
+
+          element.addEventListener("click", () => this.handleItemClick(item));
+
+          document.getElementById("room").appendChild(element);
+          this.items.push(element);
+        }
+
+        setupTimer() {
+          this.timerInterval = setInterval(() => {
+            this.timeLeft--;
+            if (this.timeLeft <= 0) {
+              this.gameOver();
+              return;
+            }
+            const minutes = Math.floor(this.timeLeft / 60);
+            const seconds = this.timeLeft % 60;
+            document.getElementById("timer").textContent = `${minutes}:${seconds
+              .toString()
+              .padStart(2, "0")}`;
+          }, 1000);
+        }
+
+        setupEventListeners() {
+          document
+            .getElementById("hint-button")
+            .addEventListener("click", () => this.showHint());
+          document
+            .getElementById("restart-button")
+            .addEventListener("click", () => this.restartGame());
+
+          // Touch events
+          document.addEventListener(
+            "touchstart",
+            this.handleTouchStart.bind(this)
+          );
+          document.addEventListener(
+            "touchmove",
+            this.handleTouchMove.bind(this)
+          );
+          document.addEventListener("touchend", this.handleTouchEnd.bind(this));
+        }
+
+        handleTouchStart(e) {
+          if (e.target.classList.contains("interactive-item")) {
+            this.touchStartX = e.touches[0].clientX;
+            this.touchStartY = e.touches[0].clientY;
+            this.currentTouchedItem = e.target;
+          }
+        }
+
+        handleTouchMove(e) {
+          if (this.currentTouchedItem) {
+            const touchX = e.touches[0].clientX;
+            const touchY = e.touches[0].clientY;
+
+            const deltaX = touchX - this.touchStartX;
+            const deltaY = touchY - this.touchStartY;
+
+            this.currentTouchedItem.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+          }
+        }
+
+        handleTouchEnd() {
+          if (this.currentTouchedItem) {
+            this.currentTouchedItem.style.transform = "";
+            this.currentTouchedItem = null;
+          }
+        }
+
+        handleItemClick(item) {
+          switch (item.type) {
+            case "puzzle1":
+              this.showPostalCodePuzzle();
+              break;
+            case "puzzle2":
+              this.showPackageSortingPuzzle();
+              break;
+            case "puzzle3":
+              this.showFinalPuzzle();
+              break;
+          }
+        }
+
+        showPostalCodePuzzle() {
+          const modal = document.getElementById("puzzle-modal");
+          const content = document.getElementById("puzzle-content");
+
+          modal.style.display = "block";
+          content.innerHTML = `
+                  <p>Decode the postal route pattern:</p>
+                  <div style="margin: 20px 0;">
+                      SPL1 → SPL2 → SPL4 → SPL8 → ?
+                  </div>
+                  <input type="text" id="postal-answer" placeholder="Enter next code">
+                  <button onclick="game.checkPostalAnswer()">Submit</button>
+              `;
+        }
+
+        checkPostalAnswer() {
+          const answer = document.getElementById("postal-answer").value;
+          if (answer.toUpperCase() === "SPL16") {
+            this.puzzlesSolved++;
+            this.playSuccessSound();
+            document.getElementById("puzzle-modal").style.display = "none";
+            this.updateInventory("postal_key");
+          }
+        }
+
+        showPackageSortingPuzzle() {
+          // Implementation for package sorting puzzle
+          // Similar structure to postal code puzzle
+        }
+
+        showFinalPuzzle() {
+          if (this.puzzlesSolved < 2) {
+            alert("Solve the previous puzzles first!");
+            return;
+          }
+
+          const modal = document.getElementById("puzzle-modal");
+          modal.style.display = "block";
+
+          // Create keypad for final code
+          const keypad = document.getElementById("keypad");
+          keypad.innerHTML = "";
+
+          for (let i = 1; i <= 9; i++) {
+            const button = document.createElement("button");
+            button.className = "keypad-button";
+            button.textContent = i;
+            button.onclick = () => this.enterCode(i);
+            keypad.appendChild(button);
+          }
+        }
+
+        enterCode(number) {
+          // Implementation for final code entry
+        }
+
+        showHint() {
+          const currentPuzzleHint =
+            this.hints[`puzzle${this.puzzlesSolved + 1}`];
+          alert(currentPuzzleHint);
+        }
+
+        updateInventory(item) {
+          const slots = document.querySelectorAll(".inventory-slot");
+          const emptySlot = Array.from(slots).find(
+            (slot) => !slot.hasChildNodes()
+          );
+
+          if (emptySlot) {
+            const itemElement = document.createElement("div");
+            itemElement.className = "inventory-item";
+            itemElement.style.background = `url('/api/placeholder/60/60')`;
+            emptySlot.appendChild(itemElement);
+          }
+        }
+
+        gameOver() {
+          clearInterval(this.timerInterval);
+          alert("Time's up! Try again?");
+          this.restartGame();
+        }
+
+        restartGame() {
+          location.reload();
+        }
+
+        playSuccessSound() {
+          // Audio feedback implementation
+        }
+
+        startBackgroundMusic() {
+          // Background music implementation
+        }
+      }
+
+      // Initialize game
+      const game = new EscapeRoom();
+    </script>
+  </body>
+</html>
