@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
   <head>
     <link rel="icon" href="./assets/splico.png" type="image/png" />
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>نتحلى بالثقة والشفافية</title>
+    <title>We Trust and Transparency</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap"
       rel="stylesheet"
@@ -13,7 +12,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <link rel="stylesheet" href="style.css" />
-
     <style>
       .SPLines {
         bottom: 2rem;
@@ -26,18 +24,20 @@
     <img src="./assets/Values/we-trust.png" alt="We Trust" class="logoV" />
 
     <div class="container">
-      <h1>نتحلى بالثقة والشفافية</h1>
+      <h1>We Trust and Transparency</h1>
       <p>
-        نحن نؤمن بأهمية الثقة والشفافية في بيئة عملنا، شاركونا رأيكم في المعرض،
-        ومن هو أكثر زميل ملتزم بقيمنا في سبل😊
+        We believe in the importance of trust and transparency in our work
+        environment. Share your opinion in the exhibition, and who is the most
+        committed colleague to our values at SPL 😊
       </p>
-      <textarea id="confessionText" placeholder="اكتب هنا..."></textarea><br />
-      <button id="submitBtn">إرسال</button>
+      <textarea id="confessionText" placeholder="Write here..."></textarea
+      ><br />
+      <button id="submitBtn">Submit</button>
       <div id="message"></div>
     </div>
     <img src="./assets/BL2.png" alt="BL" class="SPLines" />
-    <button class="lang-switch" onclick="window.location.href='trustM_en.html'">
-      English
+    <button class="lang-switch" onclick="window.location.href='trustM.html'">
+      عربي
     </button>
     <script>
       const fbURL = "https://spl-per-default-rtdb.firebaseio.com/trust.json";
@@ -46,7 +46,7 @@
       document.getElementById("submitBtn").addEventListener("click", () => {
         const confessionText = document.getElementById("confessionText").value;
         if (confessionText.trim() === "") {
-          messageEl.textContent = "الرجاء كتابة شيء قبل الإرسال";
+          messageEl.textContent = "Please write something before submitting";
           messageEl.className = "show error";
           // Auto-hide message after 5 seconds
           setTimeout(() => {
@@ -65,11 +65,11 @@
         })
           .then((response) => {
             if (response.ok) {
-              messageEl.textContent = "تم الارسال بنجاح";
+              messageEl.textContent = "Submitted successfully";
               messageEl.className = "show success";
               document.getElementById("confessionText").value = "";
             } else {
-              messageEl.textContent = "حدث خطأ أثناء الإرسال";
+              messageEl.textContent = "An error occurred during submission";
               messageEl.className = "show error";
             }
 
@@ -80,7 +80,7 @@
           })
           .catch((error) => {
             const messageEl = document.getElementById("message");
-            messageEl.textContent = "حدث خطأ أثناء الإرسال";
+            messageEl.textContent = "An error occurred during submission";
             messageEl.className = "show error";
 
             // Auto-hide message after 5 seconds

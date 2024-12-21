@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
   <head>
     <link rel="icon" href="./assets/splico.png" type="image/png" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>نتخطى دومًا التحديات</title>
-
+    <title>We Always Overcome Challenges</title>
     <link rel="stylesheet" href="style.css" />
     <style>
       .scenario-card {
@@ -112,7 +111,6 @@
       }
     </style>
   </head>
-
   <body>
     <img src="./assets/spl.png" alt="logo" class="logo" />
     <img
@@ -123,12 +121,9 @@
     <img src="./assets/BL.png" alt="BL" class="SPLines" />
 
     <div class="container">
-      <button class="start-button">ابدأ التحدي</button>
-      <button
-        onclick="window.location.href='truth_en.html'"
-        class="lang-switch"
-      >
-        English
+      <button class="start-button">Start Challenge</button>
+      <button onclick="window.location.href='truth.html'" class="lang-switch">
+        عربي
       </button>
 
       <div class="section-wrapper">
@@ -144,51 +139,52 @@
       const scenarios = [
         {
           scenario:
-            "صعوبة حفظ العملاء للعنوان الوطني بسبب كثرة البيانات والأرقام، سهلناها على العملاء وابتكرنا",
-          choices: ["العنوان المختصر", "العنوان القصير", "العنوان الأفضل"],
+            "Customers find it difficult to remember the national address due to numerous details and numbers. We made it easier for them by innovating...",
+          choices: ["Short Address", "Brief Address", "Better Address"],
           correctChoice: 0,
-          value: "نبتكر حلولًا فعّالة",
+          value: "We create effective solutions",
         },
         {
           scenario:
-            "إحدى المشاريع الموكلة لك تحتاج إلى جهود مكثفة لتسليمها في وقت قريب جداً، ماذا ستفعل؟",
+            "One of your assigned projects needs intensive efforts to deliver in a very short time. What would you do?",
           choices: [
-            "تحاول إنجاز المشروع بمفردك",
-            "تتأخر في تسليم المشروع",
-            "تطلب المساعدة من أعضاء الفريق",
+            "Try to complete the project alone",
+            "Delay the project delivery",
+            "Ask for help from team members",
           ],
           correctChoice: 2,
-          value: "نلتزم ببذل المزيد",
+          value: "We commit to doing more",
         },
         {
-          scenario: "فريقك يشعر بعدم وجود كفاءة في مخرجات أعماله.",
+          scenario: "Your team feels their work output lacks efficiency.",
           choices: [
-            "توزع الأدوار فيما بينهم لإخراج أفضل ما لديهم",
-            "لا تهتم بذلك",
-            "تعمل بنفس النهج السابق",
+            "Distribute roles among them to bring out their best",
+            "Don't care about it",
+            "Continue with the same approach",
           ],
           correctChoice: 0,
-          value: "نتعاون ونتشارك معًا",
+          value: "We cooperate and share together",
         },
         {
-          scenario: "الموظفون يشعرون بأن بيئة العمل أصبحت روتينية وعملية.",
+          scenario:
+            "Employees feel the work environment has become routine and mechanical.",
           choices: [
-            "تنظيم فعاليات ترويحية لهم",
-            "اشراكهم في القرار",
-            "تقليل عدد ساعات العمل",
+            "Organize recreational activities for them",
+            "Involve them in decision making",
+            "Reduce working hours",
           ],
           correctChoice: 0,
-          value: "نبدع ونبتكر لحلول المستقبل",
+          value: "We create and innovate for future solutions",
         },
         {
-          scenario: "موظف في فريقك ملتزم وينجز أعماله باستمرار بشكل احترافي",
+          scenario: "A team member consistently delivers work professionally.",
           choices: [
-            "شكره أمام زملائه",
-            "مكافأته يوم عمل عن بعد",
-            "دعمه وتطويره وإبراز مجهوده",
+            "Thank them in front of colleagues",
+            "Reward with a remote work day",
+            "Support their development and highlight their efforts",
           ],
           correctChoice: 2,
-          value: "نتحلى بالثقة والشفافية",
+          value: "We maintain trust and transparency",
         },
       ];
 
@@ -225,14 +221,13 @@
           choicesContainer.appendChild(button);
         });
       }
-
       function showCongratulations() {
         scenarioCard.style.display = "block";
         scenarioCard.innerHTML = `
-          <h2 style="color: var(--dark-teal); margin-bottom: 20px;">تهانينا!</h2>
-          <p style="font-size: 1.2rem;">لقد أكملت التحدي بنجاح</p>
-          <button onclick="location.reload()" class="start-button" style="margin-top: 20px;">ابدأ من جديد</button>
-        `;
+                <h2 style="color: var(--dark-teal); margin-bottom: 20px;">Congratulations!</h2>
+                <p style="font-size: 1.2rem;">You've successfully completed the challenge</p>
+                <button onclick="location.reload()" class="start-button" style="margin-top: 20px;">Start Again</button>
+            `;
         choicesContainer.innerHTML = "";
         document.getElementById("feedback").style.display = "none";
       }
@@ -240,10 +235,10 @@
       function shownotcongratulations() {
         scenarioCard.style.display = "block";
         scenarioCard.innerHTML = `
-          <h2 style="color: var(--dark-teal); margin-bottom: 20px;">للأسف!</h2>
-          <p style="font-size: 1.2rem;">لم تتمكن من إكمال التحدي</p>
-          <button onclick="location.reload()" class="start-button" style="margin-top: 20px;">ابدأ من جديد</button>
-        `;
+                <h2 style="color: var(--dark-teal); margin-bottom: 20px;">Sorry!</h2>
+                <p style="font-size: 1.2rem;">You couldn't complete the challenge</p>
+                <button onclick="location.reload()" class="start-button" style="margin-top: 20px;">Try Again</button>
+            `;
         choicesContainer.innerHTML = "";
         document.getElementById("feedback").style.display = "none";
       }
@@ -268,8 +263,8 @@
         feedback.className =
           "feedback-message " + (isCorrect ? "success" : "error");
         feedback.textContent = isCorrect
-          ? `احسنت! تخطيت التحدي بالتزامك بقيمة .. ${value}`
-          : `إجابة خاطئة - الإجابة الصحيحة هي: ${
+          ? `Well done! You overcame the challenge by committing to the value.. ${value}`
+          : `Wrong answer - The correct answer is: ${
               currentScenario.choices[currentScenario.correctChoice]
             }`;
         feedback.style.display = "block";

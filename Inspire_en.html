@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
   <head>
     <link rel="icon" href="./assets/splico.png" type="image/png" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>نبدع ونبتكر لحلول المستقبل</title>
+    <title>Innovate and Create Solutions for the Future</title>
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
@@ -149,59 +149,57 @@
       <div class="elements-container">
         <div class="element" draggable="true" data-element="AI">
           <i class="fas fa-brain"></i>
-          <span>الذكاء الاصطناعي</span>
+          <span>Artificial Intelligence</span>
         </div>
         <div class="element" draggable="true" data-element="Robotics">
           <i class="fas fa-robot"></i>
-          <span>الروبوتات</span>
+          <span>Robotics</span>
         </div>
         <div class="element" draggable="true" data-element="Automation">
           <i class="fas fa-cogs"></i>
-          <span>الأتمتة</span>
+          <span>Automation</span>
         </div>
         <div class="element" draggable="true" data-element="SPL Service">
           <i class="fas fa-microchip"></i>
-          <span>خدمات SPL</span>
+          <span>SPL Services</span>
         </div>
         <div class="element" draggable="true" data-element="Security">
           <i class="fas fa-shield-alt"></i>
-          <span>الأمن السيبراني</span>
+          <span>Cybersecurity</span>
         </div>
         <div class="element" draggable="true" data-element="IOT">
           <i class="fas fa-network-wired"></i>
-          <span>إنترنت الأشياء</span>
+          <span>Internet of Things</span>
         </div>
         <div class="element" draggable="true" data-element="Mobile">
           <i class="fas fa-mobile-alt"></i>
-          <span>تطبيقات الجوال</span>
+          <span>Mobile Apps</span>
         </div>
         <div class="element" draggable="true" data-element="Innovation">
           <i class="fas fa-lightbulb"></i>
-          <span>الابتكار</span>
+          <span>Innovation</span>
         </div>
       </div>
       <div class="drop-area">
         <div class="dropped-elements"></div>
       </div>
       <div class="participant-info">
-        <input type="text" id="participantName" placeholder="الاسم" />
-        <input type="text" id="participantSector" placeholder="القطاع" />
+        <input type="text" id="participantName" placeholder="Name" />
+        <input type="text" id="participantSector" placeholder="Sector" />
       </div>
       <div class="description-area">
         <textarea
           class="description-input"
-          placeholder="صف فكرتك هنا..."
+          placeholder="Describe your idea here..."
         ></textarea>
-        <button class="submit-idea">إرسال الفكرة</button>
+        <button class="submit-idea">Submit Idea</button>
       </div>
     </div>
 
     <img src="./assets/BL.png" alt="BL" class="SPLines" />
-    <button
-      class="lang-switch"
-      onclick="window.location.href='Inspire_en.html'"
-    >
-      English
+
+    <button class="lang-switch" onclick="window.location.href='Inspire.html'">
+      عربي
     </button>
 
     <script>
@@ -248,7 +246,7 @@
 
           // Add click event listener for removing the element
           newElement.addEventListener("click", function () {
-            if (confirm("هل تريد إزالة هذا العنصر؟")) {
+            if (confirm("Do you want to remove this element?")) {
               this.remove();
             }
           });
@@ -266,22 +264,22 @@
         const sector = document.getElementById("participantSector").value;
 
         if (selectedElements.length === 0) {
-          alert("الرجاء سحب وإفلات العناصر قبل إرسال الفكرة.");
+          alert("Please drag and drop elements before submitting your idea.");
           return;
         }
 
         if (description.trim() === "") {
-          alert("الرجاء كتابة وصف لفكرتك.");
+          alert("Please write a description for your idea.");
           return;
         }
 
         if (!name.trim()) {
-          alert("الرجاء إدخال اسمك.");
+          alert("Please enter your name.");
           return;
         }
 
         if (!sector) {
-          alert("الرجاء اختيار القطاع.");
+          alert("Please select a sector.");
           return;
         }
 
@@ -300,7 +298,7 @@
           },
         });
 
-        alert("تم إرسال الفكرة بنجاح!");
+        alert("Idea submitted successfully!");
         // Clear all fields after submission
         droppedElementsContainer.innerHTML = "";
         descriptionInput.value = "";

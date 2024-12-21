@@ -1,52 +1,44 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
   <head>
     <link rel="icon" href="./assets/splico.png" type="image/png" />
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>نتجاوز تطلعات عملائنا</title>
+    <title>Exceeding Our Clients' Expectations</title>
     <link rel="stylesheet" href="style.css" />
-
     <style>
       body {
         min-height: 100vh;
-        touch-action: none; /* Prevent default touch actions for better control */
+        touch-action: none;
       }
-
       .container {
-        /* Renamed from game-container for broader use */
         position: relative;
         width: 95vw;
         height: 90vh;
         display: flex;
-        flex-direction: column; /* Changed to column for scenario and solution */
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 30px;
       }
-
-      /* Style the scenario area */
       .scenario {
         background: rgba(255, 255, 255, 0.4);
         backdrop-filter: blur(15px);
         padding: 30px;
         border-radius: 20px;
         text-align: center;
-        font-size: 1.5rem; /* Increased font size for readability */
+        font-size: 1.5rem;
         color: var(--dark-teal);
         border: 1px solid rgba(255, 255, 255, 0.3);
         box-shadow: 0 8px 32px rgba(26, 47, 53, 0.2);
-        width: 80%; /* Occupy most of the container width */
-        max-width: 800px; /* Limit the maximum width */
+        width: 80%;
+        max-width: 800px;
       }
-
       .submit-btn,
       .next-btn {
         margin-top: 25px;
         cursor: pointer;
       }
-
       .feedback {
         background: rgba(255, 255, 255, 0.4);
         backdrop-filter: blur(15px);
@@ -55,16 +47,14 @@
         width: 80%;
         max-width: 800px;
         margin-top: 20px;
-        display: none; /* Initially hidden */
+        display: none;
       }
-
       .feedback-rating {
         font-size: 1.2rem;
         color: var(--dark-teal);
         margin-bottom: 15px;
         text-align: center;
       }
-
       .percentage-container {
         width: 100%;
         height: 30px;
@@ -73,14 +63,12 @@
         overflow: hidden;
         position: relative;
       }
-
       .percentage-bar {
         height: 100%;
         background: var(--dark-teal);
         transition: width 0.8s ease-in-out;
         border-radius: 15px;
       }
-
       .percentage-text {
         position: absolute;
         top: 50%;
@@ -88,15 +76,13 @@
         transform: translate(-50%, -50%);
         color: var(--dark-teal);
         font-weight: bold;
-        font-size: 1.5rem; /* Increased font size for better readability */
-        color: #ffffff; /* Changed color to white for better contrast */
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Added text shadow for clarity */
+        font-size: 1.5rem;
+        color: #ffffff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
       }
-
       .SPLines {
         top: 1rem;
       }
-
       .wait-feedback {
         display: none;
         font-size: 1.5rem;
@@ -106,15 +92,14 @@
     </style>
   </head>
   <body>
-    <!-- logo -->
     <img src="./assets/spl.png" alt="logo" class="logo" />
     <img src="./assets/Values/we-strive.png" alt="We Trust" class="logoV" />
-
     <div class="container">
       <div class="scenario">Loading scenario...</div>
-      <textarea class="solution-input" placeholder="اكتب حلك هنا..."></textarea>
-
-      <!-- Feedback display -->
+      <textarea
+        class="solution-input"
+        placeholder="Write your solution here..."
+      ></textarea>
       <div class="feedback">
         <div class="feedback-rating"></div>
         <div class="percentage-container">
@@ -122,35 +107,25 @@
           <div class="percentage-text"></div>
         </div>
       </div>
-
-      <!-- wait for the feedback -->
       <div class="wait-feedback" style="display: none">
-        <p>جاري التقييم...</p>
+        <p>Evaluating...</p>
       </div>
-
-      <button class="submit-btn">إرسال</button>
-
-      <button class="next-btn" style="display: none">التالي</button>
+      <button class="submit-btn">Submit</button>
+      <button class="next-btn" style="display: none">Next</button>
     </div>
     <img src="./assets/BL.png" alt="BL" class="SPLines" />
-    <button
-      class="lang-switch"
-      onclick="window.location.href='scenario_en.html'"
-    >
-      English
+    <button class="lang-switch" onclick="window.location.href='scenario.html'">
+      عربي
     </button>
-
     <script>
       const encryptionKey = "SPL_SECRET_KEY";
-
       const senarios = [
-        "عميل يرغب في تعديل عنوان الشحن قبل موعد الاستلام بيوم واحد، كيف يمكنك خدمته؟",
-        "عميل يرغب باستلام شحنته، ويواجه صعوبة في استلامها من المندوب وذلك لعدم تواجده في المنزل أغلب الوقت، كيف يمكنك خدمته؟",
-        "عميل يتسوق بشكل مستمر من متاجر عالمية، ومتذمر من أسعار شركات الشحن الأخرى، كيف ستوجهه؟",
-        "أسرة منتجة دخلت مجال الأعمال وتحتاج إلى شركات شحن تساهم في نجاح مشروعها، ويعيقها أسعار الشحن المرتفعة، كيف ستخدمهم بما أنك من منسوبي سبل؟",
-        "عميل من المنطقة الشرقية يرغب في توصيل طرد مستعجل لصديقه في الرياض في صباح اليوم التالي، بماذا يمكنك خدمته؟",
+        "A client wants to change the shipping address one day before the delivery date. How can you assist them?",
+        "A client wants to receive their shipment but is having difficulty receiving it from the courier because they are not at home most of the time. How can you assist them?",
+        "A client frequently shops from international stores and is frustrated with the prices of other shipping companies. How will you guide them?",
+        "A home-based business has entered the market and needs shipping companies to help them succeed, but high shipping costs are a barrier. How will you assist them as an SPL employee?",
+        "A client from the Eastern Province wants to send an urgent package to their friend in Riyadh by the next morning. How can you assist them?",
       ];
-
       function encrypt(text) {
         return btoa(
           text
@@ -164,7 +139,6 @@
             .join("")
         );
       }
-
       function decrypt(encoded) {
         return atob(encoded)
           .split("")
@@ -176,7 +150,6 @@
           )
           .join("");
       }
-
       const url =
         "OyQ4LyB/bH0iMTEuNzgnOTo6PyQtNTA1OC5rPjw/KzM2JDM7Nno8JCh2JWEuOickbD8qMDonNnY0NSE2PSxuY2thci0pOCA4djg2KyYgJCA6CCo3JzUiK2wuJit4FRYxJAoqEQZuKzYmPDM2bQg1CiV9JxcABiY5EwYSfjE2JzwIKBwc";
 
@@ -196,94 +169,68 @@
             },
             body: JSON.stringify(requestBody),
           });
-
           const data = await response.json();
           var jsonFeedback = data.candidates[0].content.parts[0].text;
-          debugger;
-
-          // jsonFeedback = "```json
-          // {
-          //   "التقييم": "الحل غير واضح وغير مفيد. يجب تقديم حلول عملية لحل مشكلة العميل.",
-          //   "النسبة": 20
-          // }
-          // ```
-          // "
-
-          // make it normal json
           jsonFeedback = jsonFeedback
             .replace(/```json/g, "")
             .replace(/```/g, "");
-
           jsonFeedback = JSON.parse(jsonFeedback);
-
           return jsonFeedback;
         } catch (error) {
-          console.error(" Error:", error);
+          console.error("Error:", error);
           return {
-            rating: "حدث خطأ أثناء التقييم. يرجى المحاولة مرة أخرى.",
+            rating: "An error occurred during evaluation. Please try again.",
             percentage: 0,
           };
         }
       }
-
       const scenarioDiv = document.querySelector(".scenario");
       const solutionInput = document.querySelector(".solution-input");
       const submitBtn = document.querySelector(".submit-btn");
       const feedbackDiv = document.querySelector(".feedback");
       const nextBtn = document.querySelector(".next-btn");
-
       async function getScenario() {
         const randomIndex = Math.floor(Math.random() * senarios.length);
         const scenario = senarios[randomIndex];
         scenarioDiv.textContent = scenario;
       }
-
       submitBtn.addEventListener("click", async () => {
         const solution = solutionInput.value;
         feedbackDiv.style.display = "block";
         feedbackDiv.querySelector(".feedback-rating").textContent =
-          "جاري التقييم...";
-
+          "Evaluating...";
         const evaluationPrompt = `
-                          السيناريو: ${scenarioDiv.textContent}
-                          الحل المقترح: ${solution}
-                          قيم الحل واعطني نتيجة التقييم بالعربية في أقل من 20 كلمة. يجب أن يكون التقييم إيجابياً وبناءً و عطني نسبه بين ال 11 و ال 100 بالنسبة للحل المقترح. واجعله بصيغة json
-                          مثال:
-                          {
-                            "rating": "الحل جيد ومفيد. يجب تقديم حلول أكثر تفصيلاً.",
-                            "percentage": 80
-                          }
-
-                          لا ترد الا بهذه الصيغة مهما حصل
-                      `;
+          Scenario: ${scenarioDiv.textContent}
+          Proposed solution: ${solution}
+          Evaluate the solution and give me the evaluation result in English in less than 20 words. The evaluation should be positive and constructive and give me a percentage between 11 and 100 for the proposed solution. Format it as JSON.
+          Example:
+          {
+            "rating": "The solution is good and useful. More detailed solutions should be provided.",
+            "percentage": 80
+          }
+          Respond only in this format no matter what.
+        `;
 
         const feedback = await callGoogleAI(evaluationPrompt);
-
-        // Update feedback display
         feedbackDiv.querySelector(".feedback-rating").textContent =
           feedback.rating;
         const percentageBar = feedbackDiv.querySelector(".percentage-bar");
         const percentageText = feedbackDiv.querySelector(".percentage-text");
-
         percentageBar.style.width = `${feedback.percentage}%`;
         percentageText.textContent = `${feedback.percentage}%`;
-
-        solutionInput.readOnly = true; // Make the textarea uneditable
-
+        solutionInput.readOnly = true;
         nextBtn.style.display = "block";
         submitBtn.style.display = "none";
       });
-
       nextBtn.addEventListener("click", () => {
-        solutionInput.value = ""; // Clear the input
-        solutionInput.readOnly = false; // Make the textarea editable
-        feedbackDiv.style.display = "none"; // Hide the feedback
-        nextBtn.style.display = "none"; // Hide the next button
-        submitBtn.style.display = "block"; // Show submit button
-        getScenario(); // Load the next scenario
+        solutionInput.value = "";
+        solutionInput.readOnly = false;
+        feedbackDiv.style.display = "none";
+        nextBtn.style.display = "none";
+        submitBtn.style.display = "block";
+        getScenario();
       });
-
-      getScenario(); // Initial scenario load
+      getScenario();
     </script>
   </body>
 </html>

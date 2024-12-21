@@ -188,6 +188,9 @@
     </div>
 
     <img src="./assets/BL3.png" alt="BL" class="SPLines" />
+    <button class="lang-switch" onclick="window.location.href='puzzle_en.html'">
+      English
+    </button>
 
     <script>
       const IMAGE_path = "./assets/puzzle.jpg";
@@ -323,8 +326,8 @@
         clearInterval(gameInterval);
         gameOver.style.display = "flex";
         resultMessage.textContent = won
-          ? "أثبت بجدارة أنك تعمل بخطى سريعة 👏!"
-          : "حظ أوفر في المرة القادمة 😅";
+          ? "!👏 أثبت بجدارة أنك تعمل بخطى سريعة"
+          : "😅 حظ أوفر في المرة القادمة ";
         resultTitle.textContent = won ? "مبروك!" : "حظ أوفر!";
       }
 

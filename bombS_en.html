@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
 
     <link rel="icon" href="./assets/splico.png" type="image/png" />
-    <title>نتعاون ونتشارك معًا (الشاشة الرئيسية)</title>
+    <title>Collaborate and Share Together (Main Screen)</title>
     <link rel="stylesheet" href="style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -245,14 +245,14 @@
       <div class="game-section">
         <div class="glassContainer">
           <div class="attempts">
-            المحاولات المتبقية: <span id="attemptsLeft">3</span>
+            Remaining Attempts: <span id="attemptsLeft">3</span>
           </div>
           <div id="mainGrid"></div>
         </div>
       </div>
 
       <div class="qr-container">
-        <div class="qr-text">دع زميلك يمسح الرمز</div>
+        <div class="qr-text">Let your colleague scan the code</div>
         <img
           src="./assets/qrB.png"
           alt="QR Code"
@@ -264,17 +264,15 @@
     </div>
 
     <img src="./assets/BL.png" alt="BL" class="SPLines" />
-
+    <button class="lang-switch" onclick="window.location.href='bombS.html'">
+      عربي
+    </button>
     <div class="message-overlay" id="messageOverlay">
       <div class="message-box">
         <h2 id="messageText"></h2>
-        <button onclick="hideMessage()">حاول مرة أخرى</button>
+        <button onclick="hideMessage()">Try Again</button>
       </div>
     </div>
-
-    <button class="lang-switch" onclick="window.location.href='bombS_en.html'">
-      English
-    </button>
 
     <script>
       const mainGrid = document.getElementById("mainGrid");
@@ -373,7 +371,7 @@
 
             if (attemptsLeft <= 0) {
               setTimeout(() => {
-                showMessage("انتهت المحاولات!");
+                showMessage("Attempts are over!");
               }, 100);
             }
           }
@@ -382,7 +380,9 @@
 
       function checkWin() {
         if (correctClicks === totalCorrect) {
-          showMessage("لقد نجحت! أحسنت التعاون مع زميلك.");
+          showMessage(
+            "You succeeded! Great collaboration with your colleague."
+          );
         }
       }
 

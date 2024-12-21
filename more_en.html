@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
   <head>
     <link rel="icon" href="./assets/splico.png" type="image/png" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>نلتزم ببذل المزيد</title>
+    <title>We Commit to Doing More</title>
     <link rel="stylesheet" href="style.css" />
-    <!-- Assuming you're using the same CSS -->
     <style>
       .canvas-container {
         display: flex;
@@ -157,16 +156,17 @@
     <div class="container">
       <div class="start-section">
         <p class="start-explanation">
-          مرحباً بك في تحدي الرسم! لديك ثلاث جولات، كل جولة مدتها 5 ثواني.
-          استخدم خيالك وارسم ما يخطر ببالك. هل أنت مستعد؟
+          Welcome to the Drawing Challenge! You have three rounds, each lasting
+          5 seconds. Use your imagination and draw whatever comes to mind. Are
+          you ready?
         </p>
-        <button class="start-button">ابدأ التحدي</button>
+        <button class="start-button">Start Challenge</button>
       </div>
       <div class="timer-display">5</div>
-      <div class="extra-mile-prompt">هل أنت مستعد لبذل المزيد؟</div>
+      <div class="extra-mile-prompt">Are you ready to go the extra mile?</div>
       <div class="prompt-buttons">
-        <button class="prompt-btn btn-yes">نعم</button>
-        <button class="prompt-btn btn-no">لا</button>
+        <button class="prompt-btn btn-yes">Yes</button>
+        <button class="prompt-btn btn-no">No</button>
       </div>
       <div class="canvas-container">
         <canvas id="drawingCanvas" width="900" height="550"></canvas>
@@ -174,8 +174,10 @@
     </div>
 
     <img src="./assets/BL2.png" alt="BL" class="SPLines" />
-    <button class="lang-switch" onclick="window.location.href='more_en.html'">
-      English
+
+    <!-- Add language toggle button -->
+    <button class="lang-switch" onclick="window.location.href='more.html'">
+      عربي
     </button>
 
     <script>
@@ -237,12 +239,14 @@
                 startDrawing();
               };
               document.querySelector(".btn-no").onclick = () => {
-                prompt.textContent = "التزامك ببذل المزيد يضمن تحسنك المستمر";
+                prompt.textContent =
+                  "Your commitment to doing more ensures continuous improvement";
                 promptButtons.style.display = "none";
               };
             } else {
               // Game ends after 3 rounds. Add any end-of-game logic here if needed.
-              prompt.textContent = "التزامك ببذل المزيد يضمن تحسنك المستمر";
+              prompt.textContent =
+                "Your commitment to doing more ensures continuous improvement";
               prompt.style.display = "block"; // Display after end of game
             }
           }
