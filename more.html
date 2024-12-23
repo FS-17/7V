@@ -148,6 +148,33 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       }
+      .saved-images {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .saved-images img {
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+        width: 150px;
+        height: auto;
+      }
+      .restart-button {
+        padding: 15px 30px;
+        font-size: 1.4rem;
+        background-color: var(--dark-teal);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 20px auto;
+        display: block;
+        transition: all 0.3s ease;
+      }
+      .restart-button:hover {
+        opacity: 0.9;
+      }
     </style>
   </head>
   <body>
@@ -171,9 +198,10 @@
       <div class="canvas-container">
         <canvas id="drawingCanvas" width="900" height="550"></canvas>
       </div>
+      <div class="saved-images"></div>
+      <button class="restart-button" style="display: none">ابدأ من جديد</button>
     </div>
 
-    <img src="./assets/BL2.png" alt="BL" class="SPLines" />
     <button class="lang-switch" onclick="window.location.href='more_en.html'">
       English
     </button>
@@ -189,6 +217,8 @@
       let isDrawing = false;
       const startButton = document.querySelector(".start-button");
       const promptButtons = document.querySelector(".prompt-buttons");
+      const savedImagesContainer = document.querySelector(".saved-images");
+      const restartButton = document.querySelector(".restart-button");
 
       // Initially hide timer
       timerDisplay.style.display = "none";
@@ -199,6 +229,25 @@
         timerDisplay.style.display = "block";
         document.querySelector(".canvas-container").classList.add("active");
         startDrawing();
+      });
+
+      function saveImage() {
+        const img = document.createElement("img");
+        img.src = canvas.toDataURL("image/png");
+        savedImagesContainer.appendChild(img);
+      }
+
+      function showEndGame() {
+        prompt.textContent = "التزامك ببذل المزيد يضمن تحسنك المستمر";
+        prompt.style.display = "block"; // Display after end of game
+
+        restartButton.style.display = "block";
+      }
+
+      restartButton.addEventListener("click", () => {
+        savedImagesContainer.innerHTML = "";
+        // refresh the page
+        window.location.reload();
       });
 
       function startDrawing() {
@@ -218,6 +267,9 @@
           const elapsed = Math.floor((Date.now() - startTime) / 1000);
           const remaining = drawingTime - elapsed;
           timerDisplay.textContent = remaining >= 0 ? remaining : 0;
+          if (elapsed === 5 || elapsed === 10 || elapsed === 15) {
+            saveImage();
+          }
           if (elapsed >= drawingTime) {
             clearInterval(timerInterval);
             canvas.removeEventListener("mousedown", handleMouseDown);
@@ -242,8 +294,7 @@
               };
             } else {
               // Game ends after 3 rounds. Add any end-of-game logic here if needed.
-              prompt.textContent = "التزامك ببذل المزيد يضمن تحسنك المستمر";
-              prompt.style.display = "block"; // Display after end of game
+              showEndGame();
             }
           }
         }, 1000); // Check every second

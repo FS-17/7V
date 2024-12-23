@@ -20,7 +20,8 @@ body {
     min-height: 100vh; /* Ensure full viewport height */
     flex-direction: column; /* Align items in a column */
     overflow: hidden;
-
+    background-image: url(./assets/BG.jpg);
+    background-size: cover;
 }
 
 .container {
