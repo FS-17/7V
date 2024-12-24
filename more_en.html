@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>We Commit to Doing More</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
       .canvas-container {
         display: flex;
@@ -36,19 +40,12 @@
         margin-top: 20px;
         display: none; /* Initially hidden */
       }
-      .SPLines {
-        bottom: 1rem;
-        /* rotat 180 */
-        rotate: 180deg;
-
-        /* flip */
-        /* transform: scaleX(-1); */
-      }
       .timer-display {
-        font-size: 2rem;
+        font-size: 2.5rem;
         color: var(--dark-teal);
         text-align: center;
-        margin: 10px 0;
+        margin: 0;
+        font-weight: bold;
       }
       .start-button {
         padding: 15px 30px;
@@ -174,6 +171,119 @@
       .restart-button:hover {
         opacity: 0.9;
       }
+      .drawing-tools {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 10px 0;
+      }
+
+      .tool-button {
+        padding: 8px 20px;
+        font-size: 1rem;
+        background-color: var(--dark-teal);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .tool-button i {
+        font-size: 1.2rem;
+      }
+
+      .tool-button.active {
+        background-color: #ff6b6b;
+      }
+
+      .tool-button:hover {
+        opacity: 0.9;
+      }
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .modal {
+        text-align: center;
+        max-width: 600px;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        animation: modalPop 0.3s ease-out;
+      }
+
+      .modal .extra-mile-prompt {
+        display: block;
+        margin-bottom: 1.5rem;
+        font-size: 1.4rem;
+        color: var(--dark-teal);
+        line-height: 1.8;
+        font-weight: 650;
+      }
+
+      .modal .prompt-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 1rem;
+      }
+
+      .modal .prompt-btn {
+        padding: 15px 40px;
+        font-size: 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .modal .prompt-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .modal .btn-no {
+        background: #ff6b6b;
+      }
+
+      @keyframes modalPop {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .timer-container {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        padding: 15px 40px;
+        display: inline-block;
+        margin: 20px auto;
+        max-width: 50px;
+      }
     </style>
   </head>
   <body>
@@ -189,17 +299,40 @@
         </p>
         <button class="start-button">Let’s go!</button>
       </div>
-      <div class="timer-display">5</div>
+      <div class="timer-container">
+        <div class="timer-display">5</div>
+      </div>
       <div class="extra-mile-prompt">Are you ready to go the extra mile?</div>
       <div class="prompt-buttons">
         <button class="prompt-btn btn-yes">Yes</button>
         <button class="prompt-btn btn-no">No</button>
+      </div>
+      <div class="drawing-tools">
+        <button class="tool-button" id="pen">
+          <i class="fas fa-pen"></i>
+          Pen
+        </button>
+        <button class="tool-button" id="eraser">
+          <i class="fas fa-eraser"></i>
+          Eraser
+        </button>
       </div>
       <div class="canvas-container">
         <canvas id="drawingCanvas" width="900" height="550"></canvas>
       </div>
       <div class="saved-images"></div>
       <button class="restart-button" style="display: none">Restart</button>
+      <div class="modal-overlay">
+        <div class="modal">
+          <div class="extra-mile-prompt">
+            Are you ready to go the extra mile?
+          </div>
+          <div class="prompt-buttons">
+            <button class="prompt-btn btn-yes">Yes</button>
+            <button class="prompt-btn btn-no">No</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Add language toggle button -->
@@ -212,6 +345,7 @@
       const ctx = canvas.getContext("2d");
       const prompt = document.querySelector(".extra-mile-prompt");
       const timerDisplay = document.querySelector(".timer-display");
+      const timerContainer = document.querySelector(".timer-container"); // Add this line
       let startTime = null;
       let drawingTime = 5; // Seconds per round
       let round = 1;
@@ -220,14 +354,43 @@
       const promptButtons = document.querySelector(".prompt-buttons");
       const savedImagesContainer = document.querySelector(".saved-images");
       const restartButton = document.querySelector(".restart-button");
+      // Add tool buttons
+      const penButton = document.getElementById("pen");
+      const eraserButton = document.getElementById("eraser");
+      let isErasing = false;
 
-      // Initially hide timer
+      // Store original stroke style
+      const defaultStroke = getComputedStyle(
+        document.documentElement
+      ).getPropertyValue("--dark-teal");
+
+      penButton.classList.add("active");
+
+      penButton.addEventListener("click", () => {
+        isErasing = false;
+        ctx.strokeStyle = defaultStroke;
+        ctx.lineWidth = 5;
+        penButton.classList.add("active");
+        eraserButton.classList.remove("active");
+      });
+
+      eraserButton.addEventListener("click", () => {
+        isErasing = true;
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 20;
+        eraserButton.classList.add("active");
+        penButton.classList.remove("active");
+      });
+
+      // Initially hide timer and container
       timerDisplay.style.display = "none";
+      timerContainer.style.display = "none"; // Add this line
 
       // Add click event listener to start button
       startButton.addEventListener("click", () => {
         document.querySelector(".start-section").style.display = "none";
         timerDisplay.style.display = "block";
+        timerContainer.style.display = "block"; // Add this line
         document.querySelector(".canvas-container").classList.add("active");
         startDrawing();
       });
@@ -243,10 +406,14 @@
           "Your commitment to doing more ensures continuous improvement";
         prompt.style.display = "block";
         restartButton.style.display = "block";
+        // Update this section to hide both timer and container
+        timerDisplay.style.display = "none";
+        timerContainer.style.display = "none";
       }
 
       restartButton.addEventListener("click", () => {
         savedImagesContainer.innerHTML = "";
+        // refresh the page
         window.location.reload();
       });
 
@@ -256,12 +423,12 @@
         prompt.style.display = "none"; // Hide the prompt
         promptButtons.style.display = "none";
         timerDisplay.textContent = drawingTime;
-        canvas.addEventListener("mousedown", handleMouseDown);
-        canvas.addEventListener("mousemove", handleMouseMove);
-        canvas.addEventListener("mouseup", handleMouseUp);
-        canvas.addEventListener("touchstart", handleTouchStart);
-        canvas.addEventListener("touchmove", handleTouchMove);
-        canvas.addEventListener("touchend", handleTouchEnd);
+
+        // Remove any existing event listeners first
+        removeDrawingEventListeners();
+
+        // Add new event listeners
+        addDrawingEventListeners();
 
         const timerInterval = setInterval(() => {
           const elapsed = Math.floor((Date.now() - startTime) / 1000);
@@ -272,27 +439,14 @@
           }
           if (elapsed >= drawingTime) {
             clearInterval(timerInterval);
-            canvas.removeEventListener("mousedown", handleMouseDown);
-            canvas.removeEventListener("mousemove", handleMouseMove);
-            canvas.removeEventListener("mouseup", handleMouseUp);
-            canvas.removeEventListener("touchstart", handleTouchStart);
-            canvas.removeEventListener("touchmove", handleTouchMove);
-            canvas.removeEventListener("touchend", handleTouchEnd);
+            removeDrawingEventListeners();
             isDrawing = false; // Stop current drawing phase
+            isMouseDown = false; // Reset mouse state
 
             if (round < 3) {
               // Check if it's less than 3 rounds, adjust as needed
               round++;
               showPrompt();
-              document.querySelector(".btn-yes").onclick = () => {
-                promptButtons.style.display = "none";
-                startDrawing();
-              };
-              document.querySelector(".btn-no").onclick = () => {
-                prompt.textContent =
-                  "Your commitment to doing more ensures continuous improvement";
-                promptButtons.style.display = "none";
-              };
             } else {
               // Game ends after 3 rounds. Add any end-of-game logic here if needed.
               showEndGame();
@@ -301,9 +455,56 @@
         }, 1000); // Check every second
       }
 
+      function addDrawingEventListeners() {
+        canvas.addEventListener("mousedown", handleMouseDown);
+        canvas.addEventListener("mousemove", handleMouseMove);
+        canvas.addEventListener("mouseup", handleMouseUp);
+        canvas.addEventListener("touchstart", handleTouchStart);
+        canvas.addEventListener("touchmove", handleTouchMove);
+        canvas.addEventListener("touchend", handleTouchEnd);
+      }
+
+      function removeDrawingEventListeners() {
+        canvas.removeEventListener("mousedown", handleMouseDown);
+        canvas.removeEventListener("mousemove", handleMouseMove);
+        canvas.removeEventListener("mouseup", handleMouseUp);
+        canvas.removeEventListener("touchstart", handleTouchStart);
+        canvas.removeEventListener("touchmove", handleTouchMove);
+        canvas.removeEventListener("touchend", handleTouchEnd);
+      }
+
       function showPrompt() {
-        prompt.style.display = "block";
-        promptButtons.style.display = "flex";
+        isDrawing = false; // Stop drawing when popup appears
+        isMouseDown = false; // Reset mouse state
+        removeDrawingEventListeners(); // Remove drawing event listeners
+
+        const modalOverlay = document.querySelector(".modal-overlay");
+        modalOverlay.style.display = "flex";
+
+        // Get buttons specifically from the modal
+        const modalYesBtn = modalOverlay.querySelector(".btn-yes");
+        const modalNoBtn = modalOverlay.querySelector(".btn-no");
+
+        // Remove any existing event listeners
+        modalYesBtn.replaceWith(modalYesBtn.cloneNode(true));
+        modalNoBtn.replaceWith(modalNoBtn.cloneNode(true));
+
+        // Get the fresh button references
+        const newYesBtn = modalOverlay.querySelector(".btn-yes");
+        const newNoBtn = modalOverlay.querySelector(".btn-no");
+
+        // Add new event listeners
+        newYesBtn.addEventListener("click", () => {
+          modalOverlay.style.display = "none";
+          startDrawing();
+        });
+
+        newNoBtn.addEventListener("click", () => {
+          modalOverlay.style.display = "none";
+          prompt.textContent =
+            "Your commitment to doing more ensures continuous improvement";
+          prompt.style.display = "block";
+        });
       }
 
       let isMouseDown = false;
@@ -316,8 +517,12 @@
 
       function handleMouseMove(e) {
         if (isMouseDown && isDrawing) {
-          // Only draw if the mouse is down and the drawing phase is active
           ctx.lineTo(e.offsetX, e.offsetY);
+          if (isErasing) {
+            ctx.globalCompositeOperation = "destination-out";
+          } else {
+            ctx.globalCompositeOperation = "source-over";
+          }
           ctx.stroke();
         }
       }
@@ -340,6 +545,11 @@
           const touch = e.touches[0];
           const rect = canvas.getBoundingClientRect();
           ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+          if (isErasing) {
+            ctx.globalCompositeOperation = "destination-out";
+          } else {
+            ctx.globalCompositeOperation = "source-over";
+          }
           ctx.stroke();
         }
       }
@@ -349,9 +559,7 @@
       }
 
       ctx.lineWidth = 5;
-      ctx.strokeStyle = getComputedStyle(
-        document.documentElement
-      ).getPropertyValue("--dark-teal");
+      ctx.strokeStyle = defaultStroke;
       ctx.lineCap = "round"; // For smoother lines
     </script>
   </body>
